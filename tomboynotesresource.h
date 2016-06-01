@@ -3,8 +3,8 @@
 
 #include <AkonadiAgentBase/ResourceBase>
 #include <QtNetwork>
-#include "lib/o2/o1.h"
-#include "lib/o2/o1requestor.h"
+#include "o2/src/o1.h"
+#include "o2/src/o1requestor.h"
 
 class TomboyNotesResource : public Akonadi::ResourceBase,
                            public Akonadi::AgentBase::Observer

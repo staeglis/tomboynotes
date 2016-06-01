@@ -80,6 +80,7 @@ target_link_libraries(akonadi_tomboynotes_resource
     Qt5::Network
     KF5::AkonadiAgentBase
     KF5::ConfigCore
+    o2
 )
 
 install(TARGETS akonadi_tomboynotes_resource ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
@@ -88,6 +89,7 @@ install(FILES tomboynotesresource.desktop
         DESTINATION "${KDE_INSTALL_DATAROOTDIR}/share/akonadi/agents"
 )
 
+add_subdirectory(o2)
 ########### summary ############
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
