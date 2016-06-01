@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Akonadi TomboyNotes Resource
+Comment=Resource for tomboy compatible notes server
+Type=AkonadiResource
+Exec=akonadi_tomboynotes_resource
+Icon=text-directory
+
+X-Akonadi-MimeTypes=application/x-vnd.kde.notes
+X-Akonadi-Capabilities=Resource
+X-Akonadi-Identifier=akonadi_tomboynotes_resource
