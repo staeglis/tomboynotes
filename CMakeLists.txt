@@ -90,6 +90,7 @@ install(FILES tomboynotesresource.desktop
 )
 
 add_subdirectory(o2)
+include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} "o2/src" )
 ########### summary ############
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
