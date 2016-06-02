@@ -4,6 +4,7 @@
 #include "settingsadaptor.h"
 #include "debug.h"
 
+#include <QDesktopServices>
 #include <QtDBus/QDBusConnection>
 
 using namespace Akonadi;
@@ -17,9 +18,16 @@ TomboyNotesResource::TomboyNotesResource(const QString &id)
                                                  QDBusConnection::ExportAdaptors);
 
     // TODO: you can put any resource specific initialization code here.
+    o1 = new O1(this);
     manager = new QNetworkAccessManager(this);
     requestor = new O1Requestor(manager, o1, this);
-    o1 = new O1(this);
+
+    connect(o1, SIGNAL(linkedChanged()), this, SLOT(onLinkedChanged()));
+    connect(o1, SIGNAL(linkingFailed()), this, SLOT(onLinkingFailed()));
+    connect(o1, SIGNAL(linkingSucceeded()), this, SLOT(onLinkingSucceeded()));
+    connect(o1, SIGNAL(openBrowser(QUrl)), this, SLOT(onOpenBrowser(QUrl)));
+    connect(o1, SIGNAL(closeBrowser()), this, SLOT(onCloseBrowser()));
+
     qCDebug(log_tomboynotesresource) << "Resource started";
 }
 
@@ -50,6 +58,11 @@ bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QBy
     // to provide all in one go
 
     return true;
+}
+
+void TomboyNotesResource::onOpenBrowser(const QUrl &url)
+{
+    QDesktopServices::openUrl(url);
 }
 
 void TomboyNotesResource::aboutToQuit()

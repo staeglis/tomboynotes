@@ -3,8 +3,8 @@
 
 #include <AkonadiAgentBase/ResourceBase>
 #include <QtNetwork>
-#include "o2/src/o1.h"
-#include "o2/src/o1requestor.h"
+#include "o1.h"
+#include "o1requestor.h"
 
 class TomboyNotesResource : public Akonadi::ResourceBase,
                            public Akonadi::AgentBase::Observer
@@ -22,6 +22,13 @@ protected Q_SLOTS:
     void retrieveCollections() Q_DECL_OVERRIDE;
     void retrieveItems(const Akonadi::Collection &col) Q_DECL_OVERRIDE;
     bool retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts) Q_DECL_OVERRIDE;
+
+    // o2-specific slots
+    void onLinkedChanged();
+    void onLinkingFailed();
+    void onLinkingSucceeded();
+    void onOpenBrowser(const QUrl &url);
+    void onCloseBrowser();
 
 protected:
     void aboutToQuit() Q_DECL_OVERRIDE;

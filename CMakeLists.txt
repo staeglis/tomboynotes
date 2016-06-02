@@ -84,11 +84,11 @@ qt5_add_dbus_adaptor(tomboynotesresource_SRCS
 
 add_executable(akonadi_tomboynotes_resource ${tomboynotesresource_SRCS})
 target_link_libraries(akonadi_tomboynotes_resource
+    o2
     Qt5::DBus
     Qt5::Network
     KF5::AkonadiAgentBase
     KF5::ConfigCore
-    o2
 )
 
 install(TARGETS akonadi_tomboynotes_resource ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
@@ -98,7 +98,8 @@ install(FILES tomboynotesresource.desktop
 )
 
 add_subdirectory(o2)
-#include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} "o2/src" )
+include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} "o2/src" )
+
 ########### summary ############
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
