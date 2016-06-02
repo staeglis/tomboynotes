@@ -46,6 +46,14 @@ if(XSLTPROC_EXECUTABLE)
     endmacro()
 endif()
 
+remove_definitions(-DQT_NO_URL_CAST_FROM_STRING
+                   -DQT_NO_CAST_FROM_BYTEARRAY
+                   -DQT_USE_QSTRINGBUILDER
+                   -DQT_USE_FAST_OPERATOR_PLUS
+)
+
+
+
 ########### next target ###############
 
 set(tomboynotesresource_SRCS
@@ -90,7 +98,7 @@ install(FILES tomboynotesresource.desktop
 )
 
 add_subdirectory(o2)
-include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} "o2/src" )
+#include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} "o2/src" )
 ########### summary ############
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
