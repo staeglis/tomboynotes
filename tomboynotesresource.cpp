@@ -60,9 +60,29 @@ bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QBy
     return true;
 }
 
+void TomboyNotesResource::onLinkedChanged()
+{
+
+}
+
+void TomboyNotesResource::onLinkingFailed()
+{
+
+}
+
+void TomboyNotesResource::onLinkingSucceeded()
+{
+
+}
+
 void TomboyNotesResource::onOpenBrowser(const QUrl &url)
 {
     QDesktopServices::openUrl(url);
+}
+
+void TomboyNotesResource::onCloseBrowser()
+{
+
 }
 
 void TomboyNotesResource::aboutToQuit()

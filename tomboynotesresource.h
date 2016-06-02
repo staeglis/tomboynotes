@@ -24,6 +24,7 @@ protected Q_SLOTS:
     bool retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts) Q_DECL_OVERRIDE;
 
     // o2-specific slots
+private slots:
     void onLinkedChanged();
     void onLinkingFailed();
     void onLinkingSucceeded();

@@ -94,7 +94,7 @@ if(NOT o2_WITH_QT5)
     add_definitions(${QT4_DEFINITIONS})
 endif(NOT o2_WITH_QT5)
 
-add_library( o2 ${o2_SRCS} )
+add_library( o2 STATIC ${o2_SRCS})
 
 if(o2_WITH_QT5)
     target_link_libraries( o2 Qt5::Core Qt5::Network)
