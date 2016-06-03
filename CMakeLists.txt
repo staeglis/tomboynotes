@@ -22,6 +22,7 @@ set(QT_REQUIRED_VERSION "5.3.0")
 find_package(Qt5 ${QT_REQUIRED_VERSION} REQUIRED Core Network Gui)
 
 find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Akonadi ${AKONADI_MIN_VERSION} CONFIG REQUIRED)
 
 find_program(XSLTPROC_EXECUTABLE xsltproc DOC "Path to xslt executable")
@@ -58,6 +59,9 @@ remove_definitions(-DQT_NO_URL_CAST_FROM_STRING
 
 set(tomboynotesresource_SRCS
     tomboynotesresource.cpp
+    tomboyjobbase.cpp
+    tomboyserverauthenticatejob.cpp
+    tomboyitemsdownloadjob.cpp
 )
 
 ecm_qt_declare_logging_category(tomboynotesresource_SRCS
@@ -89,6 +93,8 @@ target_link_libraries(akonadi_tomboynotes_resource
     Qt5::Network
     KF5::AkonadiAgentBase
     KF5::ConfigCore
+    KF5::KIOCore
+    KF5::KIOWidgets
 )
 
 install(TARGETS akonadi_tomboynotes_resource ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
