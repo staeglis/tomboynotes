@@ -3,7 +3,7 @@
 
 #include <AkonadiAgentBase/ResourceBase>
 #include <QtNetwork>
-#include "o1.h"
+#include "o1tomboy.h"
 #include "o1requestor.h"
 
 class TomboyNotesResource : public Akonadi::ResourceBase,
@@ -41,7 +41,7 @@ protected:
 private:
     QNetworkAccessManager *manager;
     O1Requestor *requestor;
-    O1 *o1;
+    O1Tomboy *o1;
 };
 
 #endif

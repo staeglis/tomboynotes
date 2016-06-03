@@ -18,7 +18,7 @@ TomboyNotesResource::TomboyNotesResource(const QString &id)
                                                  QDBusConnection::ExportAdaptors);
 
     // TODO: you can put any resource specific initialization code here.
-    o1 = new O1(this);
+    o1 = new O1Tomboy(this);
     manager = new QNetworkAccessManager(this);
     requestor = new O1Requestor(manager, o1, this);
 
