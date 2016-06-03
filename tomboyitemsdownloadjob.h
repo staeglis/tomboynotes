@@ -23,6 +23,9 @@ private Q_SLOTS:
     // Read the data from the job, parse them, store the results and
     // call emitResult(), which will....well, emit result() signal
     void onResult(KJob *kjob);
+
+private:
+    Akonadi::Collection::Id collectionId;
 };
 
 #endif // TOMBOYITEMSDOWNLOADJOB_H
