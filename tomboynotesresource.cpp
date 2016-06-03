@@ -46,6 +46,8 @@ void TomboyNotesResource::retrieveItems(const Akonadi::Collection &collection)
 {
     // create the job
     auto job = new TomboyItemsDownloadJob(collection.id(), this);
+    job->setAuthentication(Settings::requestToken(), Settings::requestSecret());
+    job->setServerURL(Settings::serverURL());
     // connect to its result() signal
     connect(job, &KJob::result, this, &TomboyNotesResource::onDownloadFinished);
 }

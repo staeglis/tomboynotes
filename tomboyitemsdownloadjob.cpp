@@ -2,8 +2,8 @@
 
 
 TomboyItemsDownloadJob::TomboyItemsDownloadJob(const Akonadi::Collection::Id &id, QObject *parent)
+    : TomboyJobBase(parent)
 {
-
 }
 
 void TomboyItemsDownloadJob::start()

@@ -3,11 +3,6 @@
 
 void TomboyServerAuthenticateJob::start()
 {
-    // Create the OAuth objects
-    o1 = new O1Tomboy(this);
-    manager = new KIO::AccessManager(this);
-    requestor = new O1Requestor(manager, o1, this);
-
     // Connect the o2 authenfication signals
     connect(o1, SIGNAL(linkedChanged()), this, SLOT(onLinkedChanged()));
     connect(o1, SIGNAL(linkingFailed()), this, SLOT(onLinkingFailed()));

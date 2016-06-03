@@ -18,6 +18,12 @@ public:
         setClientSecret("anynone");
     }
 
+    void restoreAuthData(const QString &token, const QString &secret) {
+        requestToken_ = token;
+        requestTokenSecret_ = secret;
+        setLinked(true);
+    }
+
 };
 
 #endif // O1TOMBOY_H

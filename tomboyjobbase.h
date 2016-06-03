@@ -12,6 +12,9 @@ class TomboyJobBase : public KJob
 public:
     explicit TomboyJobBase(QObject *parent = Q_NULLPTR);
 
+    void setServerURL(const QString &url);
+    void setAuthentication(const QString &token, const QString &secret);
+
 protected:
     KIO::AccessManager *manager;
     O1Requestor *requestor;
