@@ -22,7 +22,7 @@ protected Q_SLOTS:
     void retrieveCollections() Q_DECL_OVERRIDE;
     void retrieveItems(const Akonadi::Collection &col) Q_DECL_OVERRIDE;
     bool retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts) Q_DECL_OVERRIDE;
-    void onDownloadFinished(KJob *kjob);
+    void onItemsRetrieved(KJob *kjob);
 
 protected:
     void aboutToQuit() Q_DECL_OVERRIDE;

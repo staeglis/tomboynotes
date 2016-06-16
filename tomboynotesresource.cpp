@@ -1,3 +1,4 @@
+#include "tomboyserverauthenticatejob.h"
 #include "tomboynotesresource.h"
 
 #include "tomboyitemsdownloadjob.h"
@@ -49,7 +50,7 @@ void TomboyNotesResource::retrieveItems(const Akonadi::Collection &collection)
     job->setAuthentication(Settings::requestToken(), Settings::requestSecret());
     job->setServerURL(Settings::serverURL());
     // connect to its result() signal
-    connect(job, &KJob::result, this, &TomboyNotesResource::onDownloadFinished);
+    connect(job, &KJob::result, this, &TomboyNotesResource::onItemsRetrieved);
 }
 
 bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts)
@@ -61,9 +62,10 @@ bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QBy
     return true;
 }
 
-void TomboyNotesResource::onDownloadFinished(KJob *kjob)
+void TomboyNotesResource::onItemsRetrieved(KJob *kjob)
 {
-
+    auto job = qobject_cast<TomboyItemsDownloadJob*>(kjob);
+    itemsRetrieved(job->items());
 }
 
 void TomboyNotesResource::aboutToQuit()
@@ -74,17 +76,11 @@ void TomboyNotesResource::aboutToQuit()
 
 void TomboyNotesResource::configure(WId windowId)
 {
-    // TODO: this method is usually called when a new resource is being
-    // added to the Akonadi setup. You can do any kind of user interaction here,
-    // e.g. showing dialogs.
-    // The given window ID is usually useful to get the correct
-    // "on top of parent" behavior if the running window manager applies any kind
-    // of focus stealing prevention technique
-    //
-    // If the configuration dialog has been accepted by the user by clicking Ok,
-    // the signal configurationDialogAccepted() has to be emitted, otherwise, if
-    // the user canceled the dialog, configurationDialogRejected() has to be emitted.
-
+    if (Settings::requestToken().isEmpty() || Settings::requestToken().isEmpty())
+    {
+        auto job = new TomboyServerAuthenticateJob(this);
+        job->setServerURL(Settings::serverURL());
+    }
 }
 
 void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)

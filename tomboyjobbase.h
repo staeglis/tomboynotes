@@ -2,11 +2,11 @@
 #define TOMBOYJOBBASE_H
 
 #include <KIO/AccessManager>
-#include <kjob.h>
+#include <kcompositejob.h>
 #include "o1tomboy.h"
 #include "o1requestor.h"
 
-class TomboyJobBase : public KJob
+class TomboyJobBase : public KCompositeJob
 {
      Q_OBJECT
 public:

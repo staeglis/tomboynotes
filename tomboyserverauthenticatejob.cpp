@@ -1,7 +1,8 @@
 #include <QDesktopServices>
 #include "tomboyserverauthenticatejob.h"
 
-void TomboyServerAuthenticateJob::start()
+TomboyServerAuthenticateJob::TomboyServerAuthenticateJob(QObject *parent)
+    : TomboyJobBase(parent)
 {
     // Connect the o2 authenfication signals
     connect(o1, SIGNAL(linkedChanged()), this, SLOT(onLinkedChanged()));
@@ -9,7 +10,10 @@ void TomboyServerAuthenticateJob::start()
     connect(o1, SIGNAL(linkingSucceeded()), this, SLOT(onLinkingSucceeded()));
     connect(o1, SIGNAL(openBrowser(QUrl)), this, SLOT(onOpenBrowser(QUrl)));
     connect(o1, SIGNAL(closeBrowser()), this, SLOT(onCloseBrowser()));
+}
 
+void TomboyServerAuthenticateJob::start()
+{
     o1->link();
 }
 

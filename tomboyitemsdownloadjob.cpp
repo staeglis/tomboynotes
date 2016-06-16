@@ -7,6 +7,11 @@ TomboyItemsDownloadJob::TomboyItemsDownloadJob(const Akonadi::Collection::Id &id
     collectionId = id;
 }
 
+Akonadi::Item::List TomboyItemsDownloadJob::items() const
+{
+    return pitems;
+}
+
 void TomboyItemsDownloadJob::start()
 {
 

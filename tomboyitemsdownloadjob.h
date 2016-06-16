@@ -26,6 +26,7 @@ private Q_SLOTS:
 
 private:
     Akonadi::Collection::Id collectionId;
+    Akonadi::Item::List pitems;
 };
 
 #endif // TOMBOYITEMSDOWNLOADJOB_H
