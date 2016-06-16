@@ -48,7 +48,7 @@ void TomboyNotesResource::retrieveItems(const Akonadi::Collection &collection)
     // create the job
     auto job = new TomboyItemsDownloadJob(collection.id(), this);
     job->setAuthentication(Settings::requestToken(), Settings::requestSecret());
-    job->setServerURL(Settings::serverURL());
+    job->setServerURL(Settings::serverURL(), Settings::username());
     // connect to its result() signal
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemsRetrieved);
 }
@@ -79,7 +79,7 @@ void TomboyNotesResource::configure(WId windowId)
     if (Settings::requestToken().isEmpty() || Settings::requestToken().isEmpty())
     {
         auto job = new TomboyServerAuthenticateJob(this);
-        job->setServerURL(Settings::serverURL());
+        job->setServerURL(Settings::serverURL(), Settings::username());
     }
 }
 

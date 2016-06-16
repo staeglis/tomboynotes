@@ -3,6 +3,7 @@
 
 #include <KIO/AccessManager>
 #include <kcompositejob.h>
+#include <QString>
 #include "o1tomboy.h"
 #include "o1requestor.h"
 
@@ -12,13 +13,15 @@ class TomboyJobBase : public KCompositeJob
 public:
     explicit TomboyJobBase(QObject *parent = Q_NULLPTR);
 
-    void setServerURL(const QString &url);
+    void setServerURL(const QString &url, const QString &username);
     void setAuthentication(const QString &token, const QString &secret);
 
 protected:
-    KIO::AccessManager *manager;
+    KIO::Integration::AccessManager *manager;
     O1Requestor *requestor;
     O1Tomboy *o1;
+
+    QString userURL;
 };
 
 #endif // TOMBOYJOBBASE_H

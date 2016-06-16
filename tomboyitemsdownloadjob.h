@@ -13,16 +13,8 @@ public:
      // returns the parsed results wrapped in Akonadi::Item, see bellow
     Akonadi::Item::List items() const;
 protected:
-    // automatically called by KJob, here you start the HTTP request using
-    // KIO::get (or KIO::stored_get) (see [0]) and connect onResult() (see
-    // bellow) to its result() signal
+    // automatically called by KJob
     void start() Q_DECL_OVERRIDE;
-
-private Q_SLOTS:
-    // called when the KJob your created above via KIO::get finishes.
-    // Read the data from the job, parse them, store the results and
-    // call emitResult(), which will....well, emit result() signal
-    void onResult(KJob *kjob);
 
 private:
     Akonadi::Collection::Id collectionId;
