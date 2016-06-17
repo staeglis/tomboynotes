@@ -12,7 +12,7 @@ TomboyItemsDownloadJob::TomboyItemsDownloadJob(const Akonadi::Collection::Id &id
 
 Akonadi::Item::List TomboyItemsDownloadJob::items() const
 {
-    return pitems;
+    return resultItems;
 }
 
 void TomboyItemsDownloadJob::start()
@@ -31,7 +31,7 @@ void TomboyItemsDownloadJob::start()
     foreach (auto note, notes) {
         Akonadi::Item item( QLatin1String( "application/x-vnd.kde.notes" ) );
         item.setRemoteId(note.toObject()["guid"].toString());
-        pitems << item;
+        resultItems << item;
     }
 
     setError(0);

@@ -18,7 +18,7 @@ protected:
 
 private:
     Akonadi::Collection::Id collectionId;
-    Akonadi::Item::List pitems;
+    Akonadi::Item::List resultItems;
 };
 
 #endif // TOMBOYITEMSDOWNLOADJOB_H

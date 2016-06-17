@@ -1,6 +1,7 @@
 #include "tomboyserverauthenticatejob.h"
 #include "tomboynotesresource.h"
 
+#include "tomboyitemdownloadjob.h"
 #include "tomboyitemsdownloadjob.h"
 #include "settings.h"
 #include "settingsadaptor.h"
@@ -58,8 +59,18 @@ bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QBy
     // TODO: this method is called when Akonadi wants more data for a given item.
     // You can only provide the parts that have been requested but you are allowed
     // to provide all in one go
+    auto job = new TomboyItemDownloadJob(item, this);
+    job->setAuthentication(Settings::requestToken(), Settings::requestSecret());
+    job->setServerURL(Settings::serverURL(), Settings::username());
+    // connect to its result() signal
+    connect(job, &KJob::result, this, &TomboyNotesResource::onItemRetrieved);
 
     return true;
+}
+
+void TomboyNotesResource::onItemRetrieved(KJob *kjob)
+{
+
 }
 
 void TomboyNotesResource::onItemsRetrieved(KJob *kjob)
