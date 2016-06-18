@@ -36,7 +36,7 @@ void TomboyNotesResource::retrieveCollections()
     c.setName( name() );
 
     QStringList mimeTypes;
-    mimeTypes << QLatin1String("application/x-vnd.kde.notes");
+    mimeTypes << QLatin1String("application/x-vnd.kde.note");
     c.setContentMimeTypes( mimeTypes );
 
     Collection::List list;
@@ -71,6 +71,7 @@ bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QBy
 void TomboyNotesResource::onAuthorizationFinished(KJob *kjob)
 {
     // Saves the received client authentication data in the settings
+    qCDebug(log_tomboynotesresource) << "Authorization job finished";
     auto job = qobject_cast<TomboyServerAuthenticateJob*>(kjob);
     Settings::setRequestToken(job->getRequestToken());
     Settings::setRequestTokenSecret(job->getRequestTokenSecret());
@@ -96,10 +97,12 @@ void TomboyNotesResource::aboutToQuit()
 
 void TomboyNotesResource::configure(WId windowId)
 {
+    qCDebug(log_tomboynotesresource) << "Resource configuration started";
     if (Settings::requestToken().isEmpty() || Settings::requestToken().isEmpty())
     {
         auto job = new TomboyServerAuthenticateJob(this);
         job->setServerURL(Settings::serverURL(), Settings::username());
+        qCDebug(log_tomboynotesresource) << "Authorization job started";
     }
 }
 

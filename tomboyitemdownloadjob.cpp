@@ -8,7 +8,7 @@
 TomboyItemDownloadJob::TomboyItemDownloadJob(const Akonadi::Item &item, QObject *parent)
     : TomboyJobBase(parent)
 {
-    resultItem.setMimeType("application/x-vnd.kde.notes");
+    resultItem.setMimeType("application/x-vnd.kde.note");
     //resultItem.setId(item.id());
     resultItem.setRemoteId(item.remoteId());
     resultItem.setParentCollection(item.parentCollection());

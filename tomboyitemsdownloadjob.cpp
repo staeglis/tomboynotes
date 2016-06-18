@@ -29,7 +29,7 @@ void TomboyItemsDownloadJob::start()
     QJsonArray notes = jo["notes"].toArray();
 
     foreach (auto note, notes) {
-        Akonadi::Item item( QLatin1String( "application/x-vnd.kde.notes" ) );
+        Akonadi::Item item( QLatin1String( "application/x-vnd.kde.note" ) );
         item.setRemoteId(note.toObject()["guid"].toString());
         resultItems << item;
     }
