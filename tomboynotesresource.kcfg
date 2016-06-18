@@ -18,7 +18,7 @@
       <label>The URL to the tomboy sync server</label>
       <default></default>
     </entry>
-    <entry name="requestSecret" type="String">
+    <entry name="requestTokenSecret" type="String">
       <label>The URL to the tomboy sync server</label>
       <default></default>
     </entry>

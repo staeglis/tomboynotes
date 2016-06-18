@@ -48,7 +48,7 @@ void TomboyNotesResource::retrieveItems(const Akonadi::Collection &collection)
 {
     // create the job
     auto job = new TomboyItemsDownloadJob(collection.id(), this);
-    job->setAuthentication(Settings::requestToken(), Settings::requestSecret());
+    job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     job->setServerURL(Settings::serverURL(), Settings::username());
     // connect to its result() signal
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemsRetrieved);
@@ -60,7 +60,7 @@ bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QBy
     // You can only provide the parts that have been requested but you are allowed
     // to provide all in one go
     auto job = new TomboyItemDownloadJob(item, this);
-    job->setAuthentication(Settings::requestToken(), Settings::requestSecret());
+    job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     job->setServerURL(Settings::serverURL(), Settings::username());
     // connect to its result() signal
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemRetrieved);
@@ -68,9 +68,18 @@ bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QBy
     return true;
 }
 
+void TomboyNotesResource::onAuthorizationFinished(KJob *kjob)
+{
+    // Saves the received client authentication data in the settings
+    auto job = qobject_cast<TomboyServerAuthenticateJob*>(kjob);
+    Settings::setRequestToken(job->getRequestToken());
+    Settings::setRequestTokenSecret(job->getRequestTokenSecret());
+}
+
 void TomboyNotesResource::onItemRetrieved(KJob *kjob)
 {
-
+    auto job = qobject_cast<TomboyItemDownloadJob*>(kjob);
+    itemRetrieved(job->item());
 }
 
 void TomboyNotesResource::onItemsRetrieved(KJob *kjob)

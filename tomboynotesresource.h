@@ -22,6 +22,7 @@ protected Q_SLOTS:
     void retrieveCollections() Q_DECL_OVERRIDE;
     void retrieveItems(const Akonadi::Collection &col) Q_DECL_OVERRIDE;
     bool retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts) Q_DECL_OVERRIDE;
+    void onAuthorizationFinished(KJob *kjob);
     void onItemRetrieved(KJob *kjob);
     void onItemsRetrieved(KJob *kjob);
 

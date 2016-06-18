@@ -18,6 +18,14 @@ public:
         setClientSecret("anynone");
     }
 
+    QString getRequestToken() {
+        return requestToken_;
+    }
+
+    QString getRequestTokenSecret() {
+        return requestTokenSecret_;
+    }
+
     void restoreAuthData(const QString &token, const QString &secret) {
         requestToken_ = token;
         requestTokenSecret_ = secret;

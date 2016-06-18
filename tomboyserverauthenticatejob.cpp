@@ -17,6 +17,16 @@ void TomboyServerAuthenticateJob::start()
     o1->link();
 }
 
+QString TomboyServerAuthenticateJob::getRequestToken()
+{
+    return o1->getRequestToken();
+}
+
+QString TomboyServerAuthenticateJob::getRequestTokenSecret()
+{
+    return o1->getRequestTokenSecret();
+}
+
 void TomboyServerAuthenticateJob::onLinkingFailed()
 {
     setError(1);

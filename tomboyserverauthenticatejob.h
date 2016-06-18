@@ -1,6 +1,7 @@
 #ifndef TOMBOYSERVERAUTHENTICATEJOB_H
 #define TOMBOYSERVERAUTHENTICATEJOB_H
 
+#include <QString>
 #include "tomboyjobbase.h"
 
 
@@ -11,6 +12,8 @@ public:
     TomboyServerAuthenticateJob(QObject *parent = Q_NULLPTR);
 
     void start() Q_DECL_OVERRIDE;
+    QString getRequestToken();
+    QString getRequestTokenSecret();
 
 private Q_SLOTS:
     void onLinkingFailed();
