@@ -36,7 +36,7 @@ void TomboyServerAuthenticateJob::onLinkingFailed()
 
 void TomboyServerAuthenticateJob::onLinkingSucceeded()
 {
-    setError(0);
+    //setError(0);
     emitResult();
 }
 

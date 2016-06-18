@@ -15,11 +15,11 @@
       <default>admin</default>
     </entry>
     <entry name="requestToken" type="String">
-      <label>The URL to the tomboy sync server</label>
+      <label>The request token to the tomboy sync server</label>
       <default></default>
     </entry>
     <entry name="requestTokenSecret" type="String">
-      <label>The URL to the tomboy sync server</label>
+      <label>The request token secret to the tomboy sync server</label>
       <default></default>
     </entry>
     <entry name="ConflictHandling" type="String">

@@ -15,7 +15,7 @@ public:
         setAuthorizeUrl(QUrl(value + "/oauth/oauth_authorize.php"));
         setAccessTokenUrl(QUrl(value + "/oauth/oauth_access.php"));
         setClientId("anyone");
-        setClientSecret("anynone");
+        setClientSecret("anyone");
     }
 
     QString getRequestToken() {
