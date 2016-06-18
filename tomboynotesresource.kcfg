@@ -8,11 +8,11 @@
   <group name="General">
     <entry name="ServerURL" type="String">
       <label>The URL to the tomboy sync server</label>
-      <default></default>
+      <default>http://localhost/owncloud/index.php/apps/grauphel</default>
     </entry>
     <entry name="username" type="String">
       <label>The username of the tomboy sync server</label>
-      <default></default>
+      <default>admin</default>
     </entry>
     <entry name="requestToken" type="String">
       <label>The URL to the tomboy sync server</label>

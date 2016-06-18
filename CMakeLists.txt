@@ -24,6 +24,7 @@ find_package(Qt5 ${QT_REQUIRED_VERSION} REQUIRED Core Network Gui)
 find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Akonadi ${AKONADI_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF5Mime)
 
 find_program(XSLTPROC_EXECUTABLE xsltproc DOC "Path to xslt executable")
 
@@ -96,6 +97,7 @@ target_link_libraries(akonadi_tomboynotes_resource
     KF5::ConfigCore
     KF5::KIOCore
     KF5::KIOWidgets
+    KF5::Mime
 )
 
 install(TARGETS akonadi_tomboynotes_resource ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
