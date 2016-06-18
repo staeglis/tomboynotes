@@ -11,9 +11,9 @@ public:
     }
 
     void setBaseURL(const QString &value) {
-        setRequestTokenUrl(QUrl(value + "/oauth/oauth_request.php"));
-        setAuthorizeUrl(QUrl(value + "/oauth/oauth_authorize.php"));
-        setAccessTokenUrl(QUrl(value + "/oauth/oauth_access.php"));
+        setRequestTokenUrl(QUrl(value + "/oauth/request_token"));
+        setAuthorizeUrl(QUrl(value + "/oauth/authorize"));
+        setAccessTokenUrl(QUrl(value + "/oauth/access_token"));
         setClientId("anyone");
         setClientSecret("anyone");
     }
