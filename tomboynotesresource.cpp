@@ -30,6 +30,7 @@ TomboyNotesResource::~TomboyNotesResource()
 
 void TomboyNotesResource::retrieveCollections()
 {
+    qCDebug(log_tomboynotesresource) << "Retriving collections started";
     Collection c;
     c.setParentCollection( Collection::root() );
     c.setRemoteId( Settings::serverURL() );
@@ -52,6 +53,7 @@ void TomboyNotesResource::retrieveItems(const Akonadi::Collection &collection)
     job->setServerURL(Settings::serverURL(), Settings::username());
     // connect to its result() signal
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemsRetrieved);
+    qCDebug(log_tomboynotesresource) << "Retriving items job started";
 }
 
 bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts)
@@ -64,6 +66,7 @@ bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QBy
     job->setServerURL(Settings::serverURL(), Settings::username());
     // connect to its result() signal
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemRetrieved);
+    qCDebug(log_tomboynotesresource) << "Retriving item data job started";
 
     return true;
 }
@@ -81,12 +84,14 @@ void TomboyNotesResource::onItemRetrieved(KJob *kjob)
 {
     auto job = qobject_cast<TomboyItemDownloadJob*>(kjob);
     itemRetrieved(job->item());
+    qCDebug(log_tomboynotesresource) << "Retriving item data job finished";
 }
 
 void TomboyNotesResource::onItemsRetrieved(KJob *kjob)
 {
     auto job = qobject_cast<TomboyItemsDownloadJob*>(kjob);
     itemsRetrieved(job->items());
+    qCDebug(log_tomboynotesresource) << "Retriving items job finished";
 }
 
 void TomboyNotesResource::aboutToQuit()
@@ -102,6 +107,7 @@ void TomboyNotesResource::configure(WId windowId)
     {
         auto job = new TomboyServerAuthenticateJob(this);
         job->setServerURL(Settings::serverURL(), Settings::username());
+        connect(job, &KJob::result, this, &TomboyNotesResource::onAuthorizationFinished);
         qCDebug(log_tomboynotesresource) << "Authorization job started";
     }
 }

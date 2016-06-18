@@ -9,7 +9,6 @@ TomboyItemDownloadJob::TomboyItemDownloadJob(const Akonadi::Item &item, QObject 
     : TomboyJobBase(parent)
 {
     resultItem.setMimeType("application/x-vnd.kde.note");
-    //resultItem.setId(item.id());
     resultItem.setRemoteId(item.remoteId());
     resultItem.setParentCollection(item.parentCollection());
 }
@@ -39,14 +38,17 @@ void TomboyItemDownloadJob::start()
     modifyTime.setOffsetFromUtc(jsonNote["last-change-date"].toString().mid(27, 2).toInt() * 60 * 60);
     resultItem.setModificationTime(modifyTime);
 
+    // Set note title
     KMime::Message::Ptr akonadiNote = KMime::Message::Ptr(new KMime::Message);
     akonadiNote->subject(true)->fromUnicodeString( jsonNote["title"].toString(), "utf-8" );
 
+    // Set note content
     akonadiNote->contentType()->setMimeType("text/plain");
     akonadiNote->contentType()->setCharset("utf-8");
     akonadiNote->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
     akonadiNote->mainBodyPart()->fromUnicodeString(jsonNote["note-content"].toString().toUtf8());
 
+    // Add title and content to Akonadi::Item
     akonadiNote->assemble();
     resultItem.setPayload<KMime::Message::Ptr>(akonadiNote);
 
