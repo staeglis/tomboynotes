@@ -37,7 +37,7 @@ void TomboyItemsDownloadJob::onRequestFinished()
     QJsonArray notes = jo["notes"].toArray();
 
     foreach (auto note, notes) {
-        Akonadi::Item item( "application/x-vnd.kde.note" );
+        Akonadi::Item item( "text/x-vnd.akonadi.note" );
         item.setRemoteId(note.toObject()["guid"].toString());
         resultItems << item;
         qCDebug(log_tomboynotesresource) << "TomboyItemsDownloadJob: Retriving note with id" << item.remoteId();

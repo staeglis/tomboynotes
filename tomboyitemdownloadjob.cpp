@@ -8,7 +8,7 @@
 TomboyItemDownloadJob::TomboyItemDownloadJob(const Akonadi::Item &item, QObject *parent)
     : TomboyJobBase(parent)
 {
-    resultItem.setMimeType("application/x-vnd.kde.note");
+    resultItem.setMimeType("text/x-vnd.akonadi.note");
     resultItem.setRemoteId(item.remoteId());
     resultItem.setParentCollection(item.parentCollection());
 }
@@ -35,7 +35,7 @@ void TomboyItemDownloadJob::onRequestFinished()
 
     QJsonObject jsonNote = document.object();
 
-    resultItem.setRemoteRevision(QString::number(jsonNote["last-sync-revision"].toInt()));
+    resultItem.setRemoteRevision(QString::number(jsonNote["last-sync-revision"].toDouble()));
 
     // Set timestamp
     QDateTime modificationTime = QDateTime::fromString(jsonNote["last-change-date"].toString().mid(0, 19), Qt::ISODate);

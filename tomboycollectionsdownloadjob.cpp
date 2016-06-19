@@ -51,7 +51,7 @@ void TomboyCollectionsDownloadJob::onRequestFinished()
     qCDebug(log_tomboynotesresource) << "TomboyCollectionsDownloadJob: Sync revision " << collectionRevision.toString();
 
     QStringList mimeTypes;
-    mimeTypes << QLatin1String("application/x-vnd.kde.note");
+    mimeTypes << QLatin1String("text/x-vnd.akonadi.note");
     c.setContentMimeTypes( mimeTypes );
 
     resultCollections << c;
