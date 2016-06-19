@@ -108,6 +108,7 @@ void TomboyNotesResource::configure(WId windowId)
         auto job = new TomboyServerAuthenticateJob(this);
         job->setServerURL(Settings::serverURL(), Settings::username());
         connect(job, &KJob::result, this, &TomboyNotesResource::onAuthorizationFinished);
+        job->start();
         qCDebug(log_tomboynotesresource) << "Authorization job started";
     }
 }
