@@ -12,9 +12,14 @@ public:
     TomboyItemsDownloadJob(const Akonadi::Collection::Id &id, QObject *parent = 0);
      // returns the parsed results wrapped in Akonadi::Item, see bellow
     Akonadi::Item::List items() const;
-protected:
+
     // automatically called by KJob
     void start() Q_DECL_OVERRIDE;
+
+private Q_SLOTS:
+    // This will be called once the request is finished. You process the response
+    // and emitResult(), to which your code in the resource will react.
+    void onRequestFinished();
 
 private:
     Akonadi::Collection::Id collectionId;

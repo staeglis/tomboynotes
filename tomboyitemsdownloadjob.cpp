@@ -20,10 +20,15 @@ void TomboyItemsDownloadJob::start()
     // Get all notes
     QList<O0RequestParameter> requestParams = QList<O0RequestParameter>();
     QNetworkRequest request(userURL + "/notes");
-    QNetworkReply *reply = requestor->get(request, requestParams);
+    mReply = requestor->get(request, requestParams);
 
+    connect(mReply, &QNetworkReply::finished, this, &TomboyItemsDownloadJob::onRequestFinished);
+}
+
+void TomboyItemsDownloadJob::onRequestFinished()
+{
     // Parse received data as JSON
-    QJsonDocument document = QJsonDocument::fromJson(reply->readAll(), Q_NULLPTR);
+    QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
 
     QJsonObject jo = document.object();
     QJsonArray notes = jo["notes"].toArray();
@@ -34,6 +39,5 @@ void TomboyItemsDownloadJob::start()
         resultItems << item;
     }
 
-    setError(0);
     emitResult();
 }

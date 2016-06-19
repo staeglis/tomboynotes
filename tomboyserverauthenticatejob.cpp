@@ -14,6 +14,7 @@ TomboyServerAuthenticateJob::TomboyServerAuthenticateJob(QObject *parent)
 
 void TomboyServerAuthenticateJob::start()
 {
+    QDesktopServices::openUrl(QUrl("http://localhost"));
     o1->link();
 }
 

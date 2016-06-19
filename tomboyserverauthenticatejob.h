@@ -11,9 +11,10 @@ class TomboyServerAuthenticateJob : public TomboyJobBase
 public:
     TomboyServerAuthenticateJob(QObject *parent = Q_NULLPTR);
 
-    void start() Q_DECL_OVERRIDE;
     QString getRequestToken();
     QString getRequestTokenSecret();
+
+    void start() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void onLinkingFailed();

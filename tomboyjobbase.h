@@ -20,6 +20,7 @@ protected:
     KIO::Integration::AccessManager *manager;
     O1Requestor *requestor;
     O1Tomboy *o1;
+    QNetworkReply *mReply;
 
     QString userURL;
 };

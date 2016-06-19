@@ -23,10 +23,15 @@ void TomboyItemDownloadJob::start()
     // Get the speicific note
     QList<O0RequestParameter> requestParams = QList<O0RequestParameter>();
     QNetworkRequest request(userURL + "/note/" + resultItem.remoteId());
-    QNetworkReply *reply = requestor->get(request, requestParams);
+    mReply = requestor->get(request, requestParams);
 
+    connect(mReply, &QNetworkReply::finished, this, &TomboyItemDownloadJob::onRequestFinished);
+}
+
+void TomboyItemDownloadJob::onRequestFinished()
+{
     // Parse received data as JSON
-    QJsonDocument document = QJsonDocument::fromJson(reply->readAll(), Q_NULLPTR);
+    QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
 
     QJsonObject jo = document.object();
     QJsonObject jsonNote = jo["note"].toArray().first().toObject();
@@ -34,9 +39,9 @@ void TomboyItemDownloadJob::start()
     resultItem.setRemoteRevision(jsonNote["last-sync-revision"].toString());
 
     // Set timestamp
-    QDateTime modifyTime = QDateTime::fromString(jsonNote["last-change-date"].toString().mid(0, 19), Qt::ISODate);
-    modifyTime.setOffsetFromUtc(jsonNote["last-change-date"].toString().mid(27, 2).toInt() * 60 * 60);
-    resultItem.setModificationTime(modifyTime);
+    QDateTime modificationTime = QDateTime::fromString(jsonNote["last-change-date"].toString().mid(0, 19), Qt::ISODate);
+    modificationTime.setOffsetFromUtc(jsonNote["last-change-date"].toString().mid(27, 2).toInt() * 60 * 60);
+    resultItem.setModificationTime(modificationTime);
 
     // Set note title
     KMime::Message::Ptr akonadiNote = KMime::Message::Ptr(new KMime::Message);
