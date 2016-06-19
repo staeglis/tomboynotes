@@ -78,6 +78,8 @@ void TomboyNotesResource::onAuthorizationFinished(KJob *kjob)
     auto job = qobject_cast<TomboyServerAuthenticateJob*>(kjob);
     Settings::setRequestToken(job->getRequestToken());
     Settings::setRequestTokenSecret(job->getRequestTokenSecret());
+    Settings::self()->writeConfig();
+    synchronize();
 }
 
 void TomboyNotesResource::onCollectionsRetrieved(KJob *kjob)
