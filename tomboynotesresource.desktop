@@ -3,7 +3,7 @@ Name=Akonadi TomboyNotes Resource
 Comment=Resource for tomboy compatible notes server
 Type=AkonadiResource
 Exec=akonadi_tomboynotes_resource
-Icon=text-directory
+Icon=view-pim-notes
 
 X-Akonadi-MimeTypes=text/x-vnd.akonadi.note
 X-Akonadi-Capabilities=Resource,Notes
