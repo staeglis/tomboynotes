@@ -36,7 +36,7 @@ void TomboyItemDownloadJob::onRequestFinished()
     QJsonObject jo = document.object();
     QJsonObject jsonNote = jo["note"].toArray().first().toObject();
 
-    resultItem.setRemoteRevision(jsonNote["last-sync-revision"].toString());
+    resultItem.setRemoteRevision(QString::number(jsonNote["last-sync-revision"].toInt()));
 
     // Set timestamp
     QDateTime modificationTime = QDateTime::fromString(jsonNote["last-change-date"].toString().mid(0, 19), Qt::ISODate);
