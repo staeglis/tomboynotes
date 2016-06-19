@@ -60,10 +60,11 @@ remove_definitions(-DQT_NO_URL_CAST_FROM_STRING
 
 set(tomboynotesresource_SRCS
     tomboynotesresource.cpp
-    tomboyjobbase.cpp
-    tomboyserverauthenticatejob.cpp
+    tomboycollectionsdownloadjob.cpp
     tomboyitemdownloadjob.cpp
     tomboyitemsdownloadjob.cpp
+    tomboyjobbase.cpp
+    tomboyserverauthenticatejob.cpp
 )
 
 ecm_qt_declare_logging_category(tomboynotesresource_SRCS

@@ -1,6 +1,7 @@
 #include "tomboyserverauthenticatejob.h"
 #include "tomboynotesresource.h"
 
+#include "tomboycollectionsdownloadjob.h"
 #include "tomboyitemdownloadjob.h"
 #include "tomboyitemsdownloadjob.h"
 #include "settings.h"
@@ -31,19 +32,16 @@ TomboyNotesResource::~TomboyNotesResource()
 void TomboyNotesResource::retrieveCollections()
 {
     qCDebug(log_tomboynotesresource) << "Retriving collections started";
-    Collection c;
-    c.setParentCollection( Collection::root() );
-    c.setRemoteId( Settings::serverURL() );
-    c.setName( name() );
 
-    QStringList mimeTypes;
-    mimeTypes << QLatin1String("application/x-vnd.kde.note");
-    c.setContentMimeTypes( mimeTypes );
-
-    Collection::List list;
-    list << c;
-    collectionsRetrieved( list );
+    auto job = new TomboyCollectionsDownloadJob(this);
+    job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
+    job->setServerURL(Settings::serverURL(), Settings::username());
+    // connect to its result() signal
+    connect(job, &KJob::result, this, &TomboyNotesResource::onCollectionsRetrieved);
+    job->start();
+    qCDebug(log_tomboynotesresource) << "Retriving collections job started";
 }
+
 
 void TomboyNotesResource::retrieveItems(const Akonadi::Collection &collection)
 {
@@ -53,6 +51,7 @@ void TomboyNotesResource::retrieveItems(const Akonadi::Collection &collection)
     job->setServerURL(Settings::serverURL(), Settings::username());
     // connect to its result() signal
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemsRetrieved);
+    job->start();
     qCDebug(log_tomboynotesresource) << "Retriving items job started";
 }
 
@@ -66,6 +65,7 @@ bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QBy
     job->setServerURL(Settings::serverURL(), Settings::username());
     // connect to its result() signal
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemRetrieved);
+    job->start();
     qCDebug(log_tomboynotesresource) << "Retriving item data job started";
 
     return true;
@@ -78,6 +78,12 @@ void TomboyNotesResource::onAuthorizationFinished(KJob *kjob)
     auto job = qobject_cast<TomboyServerAuthenticateJob*>(kjob);
     Settings::setRequestToken(job->getRequestToken());
     Settings::setRequestTokenSecret(job->getRequestTokenSecret());
+}
+
+void TomboyNotesResource::onCollectionsRetrieved(KJob *kjob)
+{
+    auto job = qobject_cast<TomboyCollectionsDownloadJob*>(kjob);
+    collectionsRetrieved(job->collections());
 }
 
 void TomboyNotesResource::onItemRetrieved(KJob *kjob)

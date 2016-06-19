@@ -1,4 +1,5 @@
 #include "tomboyitemsdownloadjob.h"
+#include "debug.h"
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>>
@@ -23,10 +24,12 @@ void TomboyItemsDownloadJob::start()
     mReply = requestor->get(request, requestParams);
 
     connect(mReply, &QNetworkReply::finished, this, &TomboyItemsDownloadJob::onRequestFinished);
+    qCDebug(log_tomboynotesresource) << "TomboyItemsDownloadJob: Start network request";
 }
 
 void TomboyItemsDownloadJob::onRequestFinished()
 {
+    qCDebug(log_tomboynotesresource) << "TomboyItemsDownloadJob: Network request finished";
     // Parse received data as JSON
     QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
 
@@ -37,6 +40,7 @@ void TomboyItemsDownloadJob::onRequestFinished()
         Akonadi::Item item( QLatin1String( "application/x-vnd.kde.note" ) );
         item.setRemoteId(note.toObject()["guid"].toString());
         resultItems << item;
+        qCDebug(log_tomboynotesresource) << "TomboyItemsDownloadJob: Retriving note with id" << item.remoteId();
     }
 
     emitResult();
