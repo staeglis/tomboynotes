@@ -6,5 +6,5 @@ Exec=akonadi_tomboynotes_resource
 Icon=text-directory
 
 X-Akonadi-MimeTypes=text/x-vnd.akonadi.note
-X-Akonadi-Capabilities=Resource
+X-Akonadi-Capabilities=Resource,Notes
 X-Akonadi-Identifier=akonadi_tomboynotes_resource
