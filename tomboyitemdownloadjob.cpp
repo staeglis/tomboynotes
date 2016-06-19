@@ -33,8 +33,7 @@ void TomboyItemDownloadJob::onRequestFinished()
     // Parse received data as JSON
     QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
 
-    QJsonObject jo = document.object();
-    QJsonObject jsonNote = jo["note"].toArray().first().toObject();
+    QJsonObject jsonNote = document.object();
 
     resultItem.setRemoteRevision(QString::number(jsonNote["last-sync-revision"].toInt()));
 
