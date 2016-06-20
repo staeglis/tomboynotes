@@ -30,6 +30,11 @@ void TomboyItemDownloadJob::start()
 
 void TomboyItemDownloadJob::onRequestFinished()
 {
+    if (mReply->error() != QNetworkReply::NoError)
+    {
+        setErrorText(mReply->errorString());
+    }
+
     // Parse received data as JSON
     QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
 
@@ -38,8 +43,9 @@ void TomboyItemDownloadJob::onRequestFinished()
     resultItem.setRemoteRevision(QString::number(jsonNote["last-sync-revision"].toInt()));
 
     // Set timestamp
-    QDateTime modificationTime = QDateTime::fromString(jsonNote["last-change-date"].toString().mid(0, 19), Qt::ISODate);
-    modificationTime.setOffsetFromUtc(jsonNote["last-change-date"].toString().mid(27, 2).toInt() * 60 * 60);
+    QString timeStampJson = jsonNote["last-change-date"].toString();
+    QDateTime modificationTime = QDateTime::fromString(timeStampJson.mid(0, 19), Qt::ISODate);
+    modificationTime.setOffsetFromUtc(timeStampJson.mid(27, 2).toInt() * 60 * 60);
     resultItem.setModificationTime(modificationTime);
 
     // Set note title
@@ -56,6 +62,5 @@ void TomboyItemDownloadJob::onRequestFinished()
     akonadiNote->assemble();
     resultItem.setPayload<KMime::Message::Ptr>(akonadiNote);
 
-    setError(0);
     emitResult();
 }

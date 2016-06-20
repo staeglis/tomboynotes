@@ -30,6 +30,12 @@ void TomboyItemsDownloadJob::start()
 void TomboyItemsDownloadJob::onRequestFinished()
 {
     qCDebug(log_tomboynotesresource) << "TomboyItemsDownloadJob: Network request finished";
+    if (mReply->error() != QNetworkReply::NoError)
+    {
+        // TODO
+        setErrorText(mReply->errorString());
+    }
+
     // Parse received data as JSON
     QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
 

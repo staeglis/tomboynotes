@@ -33,6 +33,7 @@ void TomboyCollectionsDownloadJob::onRequestFinished()
     if (mReply->error() != QNetworkReply::NoError)
     {
         // TODO
+        setErrorText(mReply->errorString());
     }
 
     // Parse received data as JSON
