@@ -20,7 +20,7 @@ void TomboyItemDownloadJob::start()
 {
     // Get the speicific note
     QList<O0RequestParameter> requestParams = QList<O0RequestParameter>();
-    QNetworkRequest request(userURL + "/note" + resultItem.remoteId());
+    QNetworkRequest request(userURL + "/note/" + resultItem.remoteId());
     mReply = requestor->get(request, requestParams);
 
     connect(mReply, &QNetworkReply::finished, this, &TomboyItemDownloadJob::onRequestFinished);
@@ -43,7 +43,7 @@ void TomboyItemDownloadJob::onRequestFinished()
     qCDebug(log_tomboynotesresource) << "TomboyItemDownloadJob: JSON note: " << jsonNote;
 
     resultItem.setRemoteRevision(QString::number(jsonNote["last-sync-revision"].toInt()));
-    qCDebug(log_tomboynotesresource) << "TomboyItemDownloadJob: Sync revision " << QString::number(jsonNote["last-sync-revision"].toInt());
+    qCDebug(log_tomboynotesresource) << "TomboyItemDownloadJob: Sync revision " << resultItem.remoteRevision();
 
 
     // Set timestamp
@@ -54,10 +54,10 @@ void TomboyItemDownloadJob::onRequestFinished()
 
     // Set note title
     KMime::Message::Ptr akonadiNote = KMime::Message::Ptr(new KMime::Message);
-    akonadiNote->subject(true)->fromUnicodeString( jsonNote["title"].toString(), "utf-8" );
+    akonadiNote->subject(true)->fromUnicodeString( jsonNote["title"].toString().toUtf8(), "utf-8" );
 
     // Set note content
-    akonadiNote->contentType()->setMimeType("text/plain");
+    akonadiNote->contentType()->setMimeType("text/html");
     akonadiNote->contentType()->setCharset("utf-8");
     akonadiNote->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
     akonadiNote->mainBodyPart()->fromUnicodeString(jsonNote["note-content"].toString().toUtf8());

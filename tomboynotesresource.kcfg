@@ -28,7 +28,7 @@
     </entry>
     <entry name="ReadOnly" type="Bool">
       <label>Do not change the actual backend data.</label>
-      <default>false</default>
+      <default>true</default>
     </entry>
   </group>
 </kcfg>

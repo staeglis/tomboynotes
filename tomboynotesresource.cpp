@@ -79,7 +79,7 @@ void TomboyNotesResource::onAuthorizationFinished(KJob *kjob)
     Settings::setRequestToken(job->getRequestToken());
     Settings::setRequestTokenSecret(job->getRequestTokenSecret());
     Settings::self()->writeConfig();
-    synchronize();
+    synchronizeCollectionTree();
 }
 
 void TomboyNotesResource::onCollectionsRetrieved(KJob *kjob)
@@ -119,33 +119,26 @@ void TomboyNotesResource::configure(WId windowId)
         job->start();
         qCDebug(log_tomboynotesresource) << "Authorization job started";
     }
+    else
+        synchronize();
 }
 
 void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)
 {
-    // TODO: this method is called when somebody else, e.g. a client application,
-    // has created an item in a collection managed by your resource.
-
-    // NOTE: There is an equivalent method for collections, but it isn't part
-    // of this template code to keep it simple
+    if (Settings::readOnly())
+        cancelTask("Resource is read-only");
 }
 
 void TomboyNotesResource::itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &parts)
 {
-    // TODO: this method is called when somebody else, e.g. a client application,
-    // has changed an item managed by your resource.
-
-    // NOTE: There is an equivalent method for collections, but it isn't part
-    // of this template code to keep it simple
+    if (Settings::readOnly())
+            cancelTask("Resource is read-only");
 }
 
 void TomboyNotesResource::itemRemoved(const Akonadi::Item &item)
 {
-    // TODO: this method is called when somebody else, e.g. a client application,
-    // has deleted an item managed by your resource.
-
-    // NOTE: There is an equivalent method for collections, but it isn't part
-    // of this template code to keep it simple
+    if (Settings::readOnly())
+            cancelTask("Resource is read-only");
 }
 
 AKONADI_RESOURCE_MAIN(TomboyNotesResource)
