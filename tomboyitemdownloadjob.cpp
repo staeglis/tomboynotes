@@ -1,16 +1,14 @@
+#include "debug.h"
 #include "tomboyitemdownloadjob.h"
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>>
 #include <KMime/Message>
 
-
 TomboyItemDownloadJob::TomboyItemDownloadJob(const Akonadi::Item &item, QObject *parent)
     : TomboyJobBase(parent)
 {
-    resultItem.setMimeType("text/x-vnd.akonadi.note");
-    resultItem.setRemoteId(item.remoteId());
-    resultItem.setParentCollection(item.parentCollection());
+    resultItem = Akonadi::Item(item);
 }
 
 Akonadi::Item TomboyItemDownloadJob::item() const
@@ -22,10 +20,11 @@ void TomboyItemDownloadJob::start()
 {
     // Get the speicific note
     QList<O0RequestParameter> requestParams = QList<O0RequestParameter>();
-    QNetworkRequest request(userURL + "/note/" + resultItem.remoteId());
+    QNetworkRequest request(userURL + "/note" + resultItem.remoteId());
     mReply = requestor->get(request, requestParams);
 
     connect(mReply, &QNetworkReply::finished, this, &TomboyItemDownloadJob::onRequestFinished);
+    qCDebug(log_tomboynotesresource) << "TomboyItemDownloadJob: Start network request";
 }
 
 void TomboyItemDownloadJob::onRequestFinished()
@@ -34,13 +33,18 @@ void TomboyItemDownloadJob::onRequestFinished()
     {
         setErrorText(mReply->errorString());
     }
+    qCDebug(log_tomboynotesresource) << "TomboyItemDownloadJob: Network request finished. No error occured";
 
     // Parse received data as JSON
     QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
 
     QJsonObject jsonNote = document.object();
 
+    qCDebug(log_tomboynotesresource) << "TomboyItemDownloadJob: JSON note: " << jsonNote;
+
     resultItem.setRemoteRevision(QString::number(jsonNote["last-sync-revision"].toInt()));
+    qCDebug(log_tomboynotesresource) << "TomboyItemDownloadJob: Sync revision " << QString::number(jsonNote["last-sync-revision"].toInt());
+
 
     // Set timestamp
     QString timeStampJson = jsonNote["last-change-date"].toString();

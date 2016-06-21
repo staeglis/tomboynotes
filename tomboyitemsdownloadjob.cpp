@@ -1,5 +1,5 @@
-#include "tomboyitemsdownloadjob.h"
 #include "debug.h"
+#include "tomboyitemsdownloadjob.h"
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>>

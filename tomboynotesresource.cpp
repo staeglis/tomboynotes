@@ -92,7 +92,7 @@ void TomboyNotesResource::onItemRetrieved(KJob *kjob)
 {
     auto job = qobject_cast<TomboyItemDownloadJob*>(kjob);
     itemRetrieved(job->item());
-    qCDebug(log_tomboynotesresource) << "Retriving item data job finished";
+    qCDebug(log_tomboynotesresource) << "Retriving item data job with remoteId " << job->item().remoteId() << " finished";
 }
 
 void TomboyNotesResource::onItemsRetrieved(KJob *kjob)
