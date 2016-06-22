@@ -1,14 +1,16 @@
+#include "debug.h"
+#include "configdialog.h"
 #include "tomboyserverauthenticatejob.h"
-#include "tomboynotesresource.h"
-
 #include "tomboycollectionsdownloadjob.h"
 #include "tomboyitemdownloadjob.h"
 #include "tomboyitemsdownloadjob.h"
+#include "tomboynotesresource.h"
 #include "settings.h"
 #include "settingsadaptor.h"
-#include "debug.h"
 
 #include <QtDBus/QDBusConnection>
+#include <kconfigdialog.h>
+#include <kwindowsystem.h>
 
 using namespace Akonadi;
 
@@ -57,6 +59,7 @@ void TomboyNotesResource::retrieveItems(const Akonadi::Collection &collection)
 
 bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts)
 {
+    Q_UNUSED( parts );
     // TODO: this method is called when Akonadi wants more data for a given item.
     // You can only provide the parts that have been requested but you are allowed
     // to provide all in one go
@@ -111,6 +114,15 @@ void TomboyNotesResource::aboutToQuit()
 void TomboyNotesResource::configure(WId windowId)
 {
     qCDebug(log_tomboynotesresource) << "Resource configuration started";
+
+    ConfigDialog dialog(Settings::self());
+
+    if (windowId) {
+            KWindowSystem::setMainWindow(&dialog, windowId);
+    }
+
+    dialog.exec();
+
     if (Settings::requestToken().isEmpty() || Settings::requestToken().isEmpty())
     {
         auto job = new TomboyServerAuthenticateJob(this);

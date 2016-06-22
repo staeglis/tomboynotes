@@ -25,6 +25,7 @@ find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Akonadi ${AKONADI_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime)
+find_package(KF5WindowSystem)
 
 find_program(XSLTPROC_EXECUTABLE xsltproc DOC "Path to xslt executable")
 
@@ -59,6 +60,7 @@ remove_definitions(-DQT_NO_URL_CAST_FROM_STRING
 ########### next target ###############
 
 set(tomboynotesresource_SRCS
+    configdialog.cpp
     tomboynotesresource.cpp
     tomboycollectionsdownloadjob.cpp
     tomboyitemdownloadjob.cpp
@@ -72,6 +74,8 @@ ecm_qt_declare_logging_category(tomboynotesresource_SRCS
     IDENTIFIER log_tomboynotesresource
     CATEGORY_NAME log_tomboynotesresource
 )
+
+ki18n_wrap_ui(tomboynotesresource_SRCS configdialog.ui)
 
 kconfig_add_kcfg_files(tomboynotesresource_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/settings.kcfgc
@@ -93,12 +97,16 @@ add_executable(akonadi_tomboynotes_resource ${tomboynotesresource_SRCS})
 target_link_libraries(akonadi_tomboynotes_resource
     o2
     Qt5::DBus
+    Qt5::Gui
     Qt5::Network
     KF5::AkonadiAgentBase
     KF5::ConfigCore
+    KF5::ConfigWidgets
+    KF5::I18n
     KF5::KIOCore
     KF5::KIOWidgets
     KF5::Mime
+    KF5::WindowSystem
 )
 
 install(TARGETS akonadi_tomboynotes_resource ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
