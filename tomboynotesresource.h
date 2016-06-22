@@ -35,6 +35,8 @@ protected:
     void itemRemoved(const Akonadi::Item &item) Q_DECL_OVERRIDE;
 
 private:
+    bool configurationValid();
+
     QNetworkAccessManager *manager;
     O1Requestor *requestor;
     O1Tomboy *o1;

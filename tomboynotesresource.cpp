@@ -130,7 +130,7 @@ void TomboyNotesResource::configure(WId windowId)
         dialog.saveSettings();
     }
 
-    if (Settings::requestToken().isEmpty() || Settings::requestToken().isEmpty())
+    if (configurationValid())
     {
         auto job = new TomboyServerAuthenticateJob(this);
         job->setServerURL(Settings::serverURL(), Settings::username());
@@ -145,23 +145,28 @@ void TomboyNotesResource::configure(WId windowId)
 
 void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)
 {
-    if (Settings::readOnly()) {
+    if (Settings::readOnly() || configurationValid()) {
         cancelTask("Resource is read-only");
     }
 }
 
 void TomboyNotesResource::itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &parts)
 {
-    if (Settings::readOnly()) {
+    if (Settings::readOnly() || configurationValid()) {
             cancelTask("Resource is read-only");
     }
 }
 
 void TomboyNotesResource::itemRemoved(const Akonadi::Item &item)
 {
-    if (Settings::readOnly()) {
+    if (Settings::readOnly() || configurationValid()) {
             cancelTask("Resource is read-only");
     }
+}
+
+bool TomboyNotesResource::configurationValid()
+{
+    return Settings::requestToken().isEmpty() || Settings::requestToken().isEmpty();
 }
 
 AKONADI_RESOURCE_MAIN(TomboyNotesResource)
