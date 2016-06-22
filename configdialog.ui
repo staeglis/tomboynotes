@@ -45,7 +45,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="kcfg_ServerURL"/>
+        <widget class="QLineEdit" name="kcfg_ServerURL">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QLabel" name="label_2">

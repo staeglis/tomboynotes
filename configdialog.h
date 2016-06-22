@@ -19,10 +19,13 @@ public:
     explicit ConfigDialog(Settings* settings, QWidget *parent=Q_NULLPTR);
     ~ConfigDialog();
 
+    void saveSettings();
+
 private:
     Ui::ConfigDialog *ui;
 
     KConfigDialogManager *mManager;
+    Settings *mSettings;
 };
 
 #endif // CONFIGDIALOG_H

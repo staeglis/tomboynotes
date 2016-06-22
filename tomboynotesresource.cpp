@@ -79,10 +79,15 @@ void TomboyNotesResource::onAuthorizationFinished(KJob *kjob)
     // Saves the received client authentication data in the settings
     qCDebug(log_tomboynotesresource) << "Authorization job finished";
     auto job = qobject_cast<TomboyServerAuthenticateJob*>(kjob);
-    Settings::setRequestToken(job->getRequestToken());
-    Settings::setRequestTokenSecret(job->getRequestTokenSecret());
-    Settings::self()->writeConfig();
-    synchronizeCollectionTree();
+    if (job->errorString().isEmpty()) {
+        Settings::setRequestToken(job->getRequestToken());
+        Settings::setRequestTokenSecret(job->getRequestTokenSecret());
+        Settings::self()->writeConfig();
+        synchronizeCollectionTree();
+    }
+    else {
+        cancelTask("Authorization has been failed!");
+    }
 }
 
 void TomboyNotesResource::onCollectionsRetrieved(KJob *kjob)
@@ -121,7 +126,9 @@ void TomboyNotesResource::configure(WId windowId)
             KWindowSystem::setMainWindow(&dialog, windowId);
     }
 
-    dialog.exec();
+    if (dialog.exec()) {
+        dialog.saveSettings();
+    }
 
     if (Settings::requestToken().isEmpty() || Settings::requestToken().isEmpty())
     {
@@ -131,26 +138,30 @@ void TomboyNotesResource::configure(WId windowId)
         job->start();
         qCDebug(log_tomboynotesresource) << "Authorization job started";
     }
-    else
+    else {
         synchronize();
+    }
 }
 
 void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)
 {
-    if (Settings::readOnly())
+    if (Settings::readOnly()) {
         cancelTask("Resource is read-only");
+    }
 }
 
 void TomboyNotesResource::itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &parts)
 {
-    if (Settings::readOnly())
+    if (Settings::readOnly()) {
             cancelTask("Resource is read-only");
+    }
 }
 
 void TomboyNotesResource::itemRemoved(const Akonadi::Item &item)
 {
-    if (Settings::readOnly())
+    if (Settings::readOnly()) {
             cancelTask("Resource is read-only");
+    }
 }
 
 AKONADI_RESOURCE_MAIN(TomboyNotesResource)
