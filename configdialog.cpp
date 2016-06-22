@@ -17,6 +17,9 @@ ConfigDialog::ConfigDialog(Settings* settings, QWidget *parent) :
 
     mManager = new KConfigDialogManager(this, settings);
     mManager->updateWidgets();
+
+    connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ConfigDialog::accept);
+    connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ConfigDialog::reject);
 }
 
 ConfigDialog::~ConfigDialog()
