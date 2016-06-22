@@ -9,7 +9,6 @@
 #include "settingsadaptor.h"
 
 #include <QtDBus/QDBusConnection>
-#include <kconfigdialog.h>
 #include <kwindowsystem.h>
 
 using namespace Akonadi;

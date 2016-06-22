@@ -24,8 +24,8 @@ find_package(Qt5 ${QT_REQUIRED_VERSION} REQUIRED Core Network Gui)
 find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Akonadi ${AKONADI_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF5Mime)
-find_package(KF5WindowSystem)
+find_package(KF5Mime REQUIRED)
+find_package(KF5WindowSystem REQUIRED)
 
 find_program(XSLTPROC_EXECUTABLE xsltproc DOC "Path to xslt executable")
 
