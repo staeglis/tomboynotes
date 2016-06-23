@@ -34,6 +34,8 @@ private:
     KMime::Message::Ptr mNoteContent;
 
     JobType mJobType;
+
+    int mRemoteRevision;
 };
 
 #endif // TOMBOYITEMUPLOADJOB_H
