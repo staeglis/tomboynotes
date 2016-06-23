@@ -48,13 +48,15 @@ void TomboyItemUploadJob::start()
     QJsonArray noteChanges;
     noteChanges.append(jsonNote);
     QJsonObject postJson;
-    postJson["latest-sync-revision"] = ++mRemoteRevision;
     postJson["note-changes"] = noteChanges;
+    postJson["latest-sync-revision"] = QString::number(++mRemoteRevision);
     QJsonDocument postData;
     postData.setObject(postJson);
 
     // Network request
     QNetworkRequest request(userURL + "/notes" );
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json; boundary=7d44e178b0439");
+    request.setHeader(QNetworkRequest::ContentLengthHeader, postData.toJson().length());
     mReply = requestor->put(request, QList<O0RequestParameter>(), postData.toJson());
     connect(mReply, &QNetworkReply::finished, this, &TomboyItemUploadJob::onRequestFinished);
     qCDebug(log_tomboynotesresource) << "TomboyItemUploadJob: Start network request";
