@@ -4,6 +4,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <krandom.h>
 
 TomboyItemUploadJob::TomboyItemUploadJob(const Akonadi::Item &item, JobType jobType, QObject *parent)
     : TomboyJobBase(parent)
@@ -11,6 +12,11 @@ TomboyItemUploadJob::TomboyItemUploadJob(const Akonadi::Item &item, JobType jobT
     mSourceItem = Akonadi::Item(item);
     mNoteContent = item.payload<KMime::Message::Ptr>();
     mJobType = jobType;
+
+    // Create random remote id if adding new item
+    if (jobType == JobType::addItem) {
+        mSourceItem.remoteId() = KRandom::randomString(37);
+    }
 }
 
 Akonadi::Item TomboyItemUploadJob::item() const
@@ -20,6 +26,19 @@ Akonadi::Item TomboyItemUploadJob::item() const
 
 void TomboyItemUploadJob::start()
 {
+    QJsonObject jsonNote;
+
+    jsonNote["guid"] = mSourceItem.remoteId();
+    if (mJobType == JobType::deleteItem) {
+        jsonNote["command"] = "delete";
+    }
+    else {
+        jsonNote["title"] = mNoteContent->headerByType("subject")->asUnicodeString();
+        jsonNote["note-content"] = mNoteContent->mainBodyPart()->decodedText(false, false);
+        jsonNote["note-content-version"] = "1";
+        jsonNote["last-change-date"] = mSourceItem.modificationTime().toString(Qt::ISODate);
+    }
+
     QList<O0RequestParameter> requestParams = QList<O0RequestParameter>();
     QNetworkRequest request(userURL + "/notes" );
 

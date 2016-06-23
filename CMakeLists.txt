@@ -22,6 +22,7 @@ set(QT_REQUIRED_VERSION "5.3.0")
 find_package(Qt5 ${QT_REQUIRED_VERSION} REQUIRED Core Network Gui)
 
 find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5CoreAddons REQUIRED)
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Akonadi ${AKONADI_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime REQUIRED)
@@ -103,6 +104,7 @@ target_link_libraries(akonadi_tomboynotes_resource
     KF5::AkonadiAgentBase
     KF5::ConfigCore
     KF5::ConfigWidgets
+    KF5::CoreAddons
     KF5::I18n
     KF5::KIOCore
     KF5::KIOWidgets

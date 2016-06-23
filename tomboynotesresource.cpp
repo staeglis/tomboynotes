@@ -86,7 +86,7 @@ void TomboyNotesResource::onAuthorizationFinished(KJob *kjob)
     if (job->errorString().isEmpty()) {
         Settings::setRequestToken(job->getRequestToken());
         Settings::setRequestTokenSecret(job->getRequestTokenSecret());
-        Settings::self()->writeConfig();
+        Settings::self()->save();
         synchronizeCollectionTree();
     }
     else {
@@ -116,6 +116,7 @@ void TomboyNotesResource::onItemChangeCommitted(KJob *kjob)
     }
 
     changeCommitted(job->item());
+    synchronize();
 }
 
 void TomboyNotesResource::onItemRetrieved(KJob *kjob)
