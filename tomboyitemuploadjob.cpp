@@ -20,13 +20,18 @@ TomboyItemUploadJob::TomboyItemUploadJob(const Akonadi::Item &item, JobType jobT
 
     // Create random remote id if adding new item
     if (jobType == JobType::addItem) {
-        mSourceItem.remoteId() = KRandom::randomString(37);
+        mSourceItem.setRemoteId(KRandom::randomString(37));
     }
 }
 
 Akonadi::Item TomboyItemUploadJob::item() const
 {
     return mSourceItem;
+}
+
+JobType TomboyItemUploadJob::jobType()
+{
+    return mJobType;
 }
 
 void TomboyItemUploadJob::start()

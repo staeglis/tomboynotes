@@ -21,6 +21,8 @@ public:
     // Returns mSourceItem for post-processing purposes
     Akonadi::Item item() const;
 
+    JobType jobType();
+
     // automatically called by KJob
     void start() Q_DECL_OVERRIDE;
 

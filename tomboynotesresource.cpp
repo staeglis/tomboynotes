@@ -115,8 +115,13 @@ void TomboyNotesResource::onItemChangeCommitted(KJob *kjob)
         return;
     }
 
-    changeCommitted(job->item());
-    synchronize();
+    if (job->jobType() == JobType::deleteItem) {
+        changeProcessed();
+    }
+    else {
+        changeCommitted(job->item());
+    }
+    //synchronize();
 }
 
 void TomboyNotesResource::onItemRetrieved(KJob *kjob)
@@ -186,7 +191,7 @@ void TomboyNotesResource::configure(WId windowId)
 
 void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)
 {
-    if (Settings::readOnly() || configurationNotValid() || true) {
+    if (Settings::readOnly() || configurationNotValid()) {
         cancelTask("Resource is read-only");
         return;
     }
