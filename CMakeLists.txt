@@ -64,6 +64,7 @@ set(tomboynotesresource_SRCS
     tomboynotesresource.cpp
     tomboycollectionsdownloadjob.cpp
     tomboyitemdownloadjob.cpp
+    tomboyitemuploadjob.cpp
     tomboyitemsdownloadjob.cpp
     tomboyjobbase.cpp
     tomboyserverauthenticatejob.cpp
