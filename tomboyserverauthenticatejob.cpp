@@ -30,7 +30,7 @@ QString TomboyServerAuthenticateJob::getRequestTokenSecret()
 void TomboyServerAuthenticateJob::onLinkingFailed()
 {
     setError(1);
-    setErrorText("Authorization has been failed");
+    setErrorText("Authorization has been failed!");
     emitResult();
 }
 

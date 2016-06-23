@@ -21,13 +21,18 @@ TomboyNotesResource::TomboyNotesResource(const QString &id)
                                                  Settings::self(),
                                                  QDBusConnection::ExportAdaptors);
 
-    // TODO: you can put any resource specific initialization code here.
+    // Status message stuff
+    mStatusMessageTimer = new QTimer(this);
+    mStatusMessageTimer->setSingleShot(true);
+    connect(mStatusMessageTimer, &QTimer::timeout, this, &TomboyNotesResource::clearStatusMessage);
+    connect(this, &AgentBase::error, this, &TomboyNotesResource::showError);
 
     qCDebug(log_tomboynotesresource) << "Resource started";
 }
 
 TomboyNotesResource::~TomboyNotesResource()
 {
+    delete mStatusMessageTimer;
 }
 
 void TomboyNotesResource::retrieveCollections()
@@ -59,9 +64,8 @@ void TomboyNotesResource::retrieveItems(const Akonadi::Collection &collection)
 bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts)
 {
     Q_UNUSED( parts );
-    // TODO: this method is called when Akonadi wants more data for a given item.
-    // You can only provide the parts that have been requested but you are allowed
-    // to provide all in one go
+
+    // this method is called when Akonadi wants more data for a given item.
     auto job = new TomboyItemDownloadJob(item, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     job->setServerURL(Settings::serverURL(), Settings::username());
@@ -85,7 +89,7 @@ void TomboyNotesResource::onAuthorizationFinished(KJob *kjob)
         synchronizeCollectionTree();
     }
     else {
-        cancelTask("Authorization has been failed!");
+        showError(job->errorText());
     }
 }
 
@@ -94,6 +98,7 @@ void TomboyNotesResource::onCollectionsRetrieved(KJob *kjob)
     auto job = qobject_cast<TomboyCollectionsDownloadJob*>(kjob);
     if (job->error()) {
         cancelTask();
+        showError(job->errorText());
         return;
     }
 
@@ -106,6 +111,7 @@ void TomboyNotesResource::onItemRetrieved(KJob *kjob)
 
     if (job->error()) {
         cancelTask();
+        showError(job->errorText());
         return;
     }
 
@@ -118,11 +124,17 @@ void TomboyNotesResource::onItemsRetrieved(KJob *kjob)
     auto job = qobject_cast<TomboyItemsDownloadJob*>(kjob);
     if (job->error()) {
         cancelTask();
+        showError(job->errorText());
         return;
     }
 
     itemsRetrieved(job->items());
     qCDebug(log_tomboynotesresource) << "Retriving items job finished";
+}
+
+void TomboyNotesResource::clearStatusMessage()
+{
+    Q_EMIT status(Akonadi::AgentBase::Idle, QString());
 }
 
 void TomboyNotesResource::aboutToQuit()
@@ -182,6 +194,12 @@ void TomboyNotesResource::itemRemoved(const Akonadi::Item &item)
 bool TomboyNotesResource::configurationValid()
 {
     return Settings::requestToken().isEmpty() || Settings::requestToken().isEmpty();
+}
+
+void TomboyNotesResource::showError(const QString errorText)
+{
+    Q_EMIT status(Akonadi::AgentBase::Idle, errorText);
+    mStatusMessageTimer->start(1000 * 10);
 }
 
 AKONADI_RESOURCE_MAIN(TomboyNotesResource)

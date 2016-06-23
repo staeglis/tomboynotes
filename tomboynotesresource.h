@@ -27,6 +27,9 @@ protected Q_SLOTS:
     void onItemRetrieved(KJob *kjob);
     void onItemsRetrieved(KJob *kjob);
 
+private Q_SLOTS:
+    void clearStatusMessage();
+
 protected:
     void aboutToQuit() Q_DECL_OVERRIDE;
 
@@ -36,10 +39,13 @@ protected:
 
 private:
     bool configurationValid();
+    void showError(const QString errorText);
 
     QNetworkAccessManager *manager;
     O1Requestor *requestor;
     O1Tomboy *o1;
+
+    QTimer *mStatusMessageTimer;
 };
 
 #endif
