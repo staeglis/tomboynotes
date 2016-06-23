@@ -92,12 +92,23 @@ void TomboyNotesResource::onAuthorizationFinished(KJob *kjob)
 void TomboyNotesResource::onCollectionsRetrieved(KJob *kjob)
 {
     auto job = qobject_cast<TomboyCollectionsDownloadJob*>(kjob);
+    if (job->error()) {
+        cancelTask();
+        return;
+    }
+
     collectionsRetrieved(job->collections());
 }
 
 void TomboyNotesResource::onItemRetrieved(KJob *kjob)
 {
     auto job = qobject_cast<TomboyItemDownloadJob*>(kjob);
+
+    if (job->error()) {
+        cancelTask();
+        return;
+    }
+
     itemRetrieved(job->item());
     qCDebug(log_tomboynotesresource) << "Retriving item data job with remoteId " << job->item().remoteId() << " finished";
 }
@@ -105,6 +116,11 @@ void TomboyNotesResource::onItemRetrieved(KJob *kjob)
 void TomboyNotesResource::onItemsRetrieved(KJob *kjob)
 {
     auto job = qobject_cast<TomboyItemsDownloadJob*>(kjob);
+    if (job->error()) {
+        cancelTask();
+        return;
+    }
+
     itemsRetrieved(job->items());
     qCDebug(log_tomboynotesresource) << "Retriving items job finished";
 }
