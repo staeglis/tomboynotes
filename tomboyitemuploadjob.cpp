@@ -31,16 +31,15 @@ Akonadi::Item TomboyItemUploadJob::item() const
 
 void TomboyItemUploadJob::start()
 {
-    QJsonObject jsonNote;
-
     // Convert note to JSON
+    QJsonObject jsonNote;
     jsonNote["guid"] = mSourceItem.remoteId();
     if (mJobType == JobType::deleteItem) {
         jsonNote["command"] = "delete";
     }
     else if (mNoteContent != NULL) {
         jsonNote["title"] = mNoteContent->headerByType("subject")->asUnicodeString();
-        jsonNote["note-content"] = mNoteContent->mainBodyPart()->decodedText(false, false);
+        jsonNote["note-content"] = mNoteContent->mainBodyPart()->decodedText();
         jsonNote["note-content-version"] = "1";
         jsonNote["last-change-date"] = mSourceItem.modificationTime().toString(Qt::ISODate);
     }
@@ -49,7 +48,7 @@ void TomboyItemUploadJob::start()
     QJsonArray noteChanges;
     noteChanges.append(jsonNote);
     QJsonObject postJson;
-    postJson["latest-sync-revision"] = mRemoteRevision;
+    postJson["latest-sync-revision"] = ++mRemoteRevision;
     postJson["note-changes"] = noteChanges;
     QJsonDocument postData;
     postData.setObject(postJson);
@@ -80,10 +79,8 @@ void TomboyItemUploadJob::onRequestFinished()
     // Check if server status is as expected
     bool found = false;
     foreach (auto note, notes) {
-        if (note.toObject()["guid"].toString() == mSourceItem.remoteId()) {
-            found = true;
-            break;
-        }
+        found = (note.toObject()["guid"].toString() == mSourceItem.remoteId());
+        break;
     }
     if (mJobType == JobType::deleteItem && found) {
         setError(0);
