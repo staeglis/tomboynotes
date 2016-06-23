@@ -10,7 +10,10 @@ TomboyItemUploadJob::TomboyItemUploadJob(const Akonadi::Item &item, JobType jobT
     : TomboyJobBase(parent)
 {
     mSourceItem = Akonadi::Item(item);
-    mNoteContent = item.payload<KMime::Message::Ptr>();
+    if (item.hasPayload<KMime::Message::Ptr>()) {
+        mNoteContent = item.payload<KMime::Message::Ptr>();
+    }
+
     mJobType = jobType;
 
     mRemoteRevision = item.parentCollection().remoteRevision().toInt();
@@ -35,7 +38,7 @@ void TomboyItemUploadJob::start()
     if (mJobType == JobType::deleteItem) {
         jsonNote["command"] = "delete";
     }
-    else {
+    else if (mNoteContent != NULL) {
         jsonNote["title"] = mNoteContent->headerByType("subject")->asUnicodeString();
         jsonNote["note-content"] = mNoteContent->mainBodyPart()->decodedText(false, false);
         jsonNote["note-content-version"] = "1";
@@ -52,9 +55,8 @@ void TomboyItemUploadJob::start()
     postData.setObject(postJson);
 
     // Network request
-    QList<O0RequestParameter> requestParams = QList<O0RequestParameter>();
     QNetworkRequest request(userURL + "/notes" );
-    mReply = requestor->put(request, requestParams, postData.toJson());
+    mReply = requestor->put(request, QList<O0RequestParameter>(), postData.toJson());
     connect(mReply, &QNetworkReply::finished, this, &TomboyItemUploadJob::onRequestFinished);
     qCDebug(log_tomboynotesresource) << "TomboyItemUploadJob: Start network request";
 }

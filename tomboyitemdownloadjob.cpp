@@ -19,9 +19,8 @@ Akonadi::Item TomboyItemDownloadJob::item() const
 void TomboyItemDownloadJob::start()
 {
     // Get the speicific note
-    QList<O0RequestParameter> requestParams = QList<O0RequestParameter>();
     QNetworkRequest request(userURL + "/note/" + resultItem.remoteId());
-    mReply = requestor->get(request, requestParams);
+    mReply = requestor->get(request, QList<O0RequestParameter>());
 
     connect(mReply, &QNetworkReply::finished, this, &TomboyItemDownloadJob::onRequestFinished);
     qCDebug(log_tomboynotesresource) << "TomboyItemDownloadJob: Start network request";

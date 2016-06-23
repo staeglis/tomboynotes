@@ -186,28 +186,29 @@ void TomboyNotesResource::configure(WId windowId)
 
 void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)
 {
-    if (Settings::readOnly() || configurationNotValid()) {
+    if (Settings::readOnly() || configurationNotValid() || true) {
         cancelTask("Resource is read-only");
         return;
     }
 
-    auto job = new TomboyItemUploadJob(item, JobType::modifyItem, this);
-    job->setServerURL(Settings::serverURL(), Settings::username());
+    auto job = new TomboyItemUploadJob(item, JobType::addItem, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
+    job->setServerURL(Settings::serverURL(), Settings::username());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
     job->start();
 }
 
 void TomboyNotesResource::itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &parts)
 {
-    if (Settings::readOnly() || configurationNotValid()) {
+    Q_UNUSED( parts );
+    if (Settings::readOnly() || configurationNotValid() || true) {
             cancelTask("Resource is read-only");
             return;
     }
 
     auto job = new TomboyItemUploadJob(item, JobType::modifyItem, this);
-    job->setServerURL(Settings::serverURL(), Settings::username());
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
+    job->setServerURL(Settings::serverURL(), Settings::username());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
     job->start();
 }
@@ -219,9 +220,9 @@ void TomboyNotesResource::itemRemoved(const Akonadi::Item &item)
             return;
     }
 
-    auto job = new TomboyItemUploadJob(item, JobType::modifyItem, this);
-    job->setServerURL(Settings::serverURL(), Settings::username());
+    auto job = new TomboyItemUploadJob(item, JobType::deleteItem, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
+    job->setServerURL(Settings::serverURL(), Settings::username());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
     job->start();
 }
