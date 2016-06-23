@@ -3,6 +3,7 @@
 
 #include <QJsonObject>
 #include <AkonadiAgentBase/ResourceBase>
+#include <KMime/Message>
 #include "tomboyjobbase.h"
 
 
@@ -10,7 +11,10 @@ class TomboyItemUploadJob : public TomboyJobBase
 {
     Q_OBJECT
 public:
-    TomboyItemUploadJob(QObject *parent = 0);
+    TomboyItemUploadJob(const Akonadi::Item &item, QObject *parent = 0);
+
+    // Returns mSourceItem for post-processing purposes
+    Akonadi::Item item() const;
 
     // automatically called by KJob
     void start() Q_DECL_OVERRIDE;
@@ -21,7 +25,8 @@ private Q_SLOTS:
     void onRequestFinished();
 
 private:
-    QJsonObject resultItem;
+    Akonadi::Item mSourceItem;
+    KMime::Message::Ptr mNoteContent;
 };
 
 #endif // TOMBOYITEMUPLOADJOB_H
