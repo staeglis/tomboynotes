@@ -171,7 +171,7 @@ void TomboyNotesResource::configure(WId windowId)
         dialog.saveSettings();
     }
 
-    if (configurationValid())
+    if (configurationNotValid())
     {
         auto job = new TomboyServerAuthenticateJob(this);
         job->setServerURL(Settings::serverURL(), Settings::username());
@@ -186,44 +186,47 @@ void TomboyNotesResource::configure(WId windowId)
 
 void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)
 {
-    if (Settings::readOnly() || configurationValid()) {
+    if (Settings::readOnly() || configurationNotValid()) {
         cancelTask("Resource is read-only");
         return;
     }
 
     auto job = new TomboyItemUploadJob(item, JobType::modifyItem, this);
     job->setServerURL(Settings::serverURL(), Settings::username());
+    job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
     job->start();
 }
 
 void TomboyNotesResource::itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &parts)
 {
-    if (Settings::readOnly() || configurationValid()) {
+    if (Settings::readOnly() || configurationNotValid()) {
             cancelTask("Resource is read-only");
             return;
     }
 
     auto job = new TomboyItemUploadJob(item, JobType::modifyItem, this);
     job->setServerURL(Settings::serverURL(), Settings::username());
+    job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
     job->start();
 }
 
 void TomboyNotesResource::itemRemoved(const Akonadi::Item &item)
 {
-    if (Settings::readOnly() || configurationValid()) {
+    if (Settings::readOnly() || configurationNotValid()) {
             cancelTask("Resource is read-only");
             return;
     }
 
     auto job = new TomboyItemUploadJob(item, JobType::modifyItem, this);
     job->setServerURL(Settings::serverURL(), Settings::username());
+    job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
     job->start();
 }
 
-bool TomboyNotesResource::configurationValid()
+bool TomboyNotesResource::configurationNotValid()
 {
     return Settings::requestToken().isEmpty() || Settings::requestToken().isEmpty();
 }

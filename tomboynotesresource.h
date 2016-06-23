@@ -44,7 +44,7 @@ protected:
     void itemRemoved(const Akonadi::Item &item) Q_DECL_OVERRIDE;
 
 private:
-    bool configurationValid();
+    bool configurationNotValid();
 
     // Status handling
     void showError(const QString errorText);
