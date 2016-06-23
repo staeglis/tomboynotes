@@ -1,17 +1,22 @@
 #ifndef TOMBOYITEMUPLOADJOB_H
 #define TOMBOYITEMUPLOADJOB_H
 
-#include <QJsonObject>
 #include <AkonadiAgentBase/ResourceBase>
 #include <KMime/Message>
 #include "tomboyjobbase.h"
 
+enum class JobType
+{
+    addItem,
+    modifyItem,
+    deleteItem
+};
 
 class TomboyItemUploadJob : public TomboyJobBase
 {
     Q_OBJECT
 public:
-    TomboyItemUploadJob(const Akonadi::Item &item, QObject *parent = 0);
+    TomboyItemUploadJob(const Akonadi::Item &item, JobType jobType, QObject *parent = 0);
 
     // Returns mSourceItem for post-processing purposes
     Akonadi::Item item() const;
@@ -27,6 +32,8 @@ private Q_SLOTS:
 private:
     Akonadi::Item mSourceItem;
     KMime::Message::Ptr mNoteContent;
+
+    JobType mJobType;
 };
 
 #endif // TOMBOYITEMUPLOADJOB_H

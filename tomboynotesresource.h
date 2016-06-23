@@ -27,6 +27,7 @@ protected Q_SLOTS:
     // Slots for Job result handling
     void onAuthorizationFinished(KJob *kjob);
     void onCollectionsRetrieved(KJob *kjob);
+    void onItemChangeCommitted(KJob *kjob);
     void onItemRetrieved(KJob *kjob);
     void onItemsRetrieved(KJob *kjob);
 

@@ -97,7 +97,7 @@ void TomboyNotesResource::onAuthorizationFinished(KJob *kjob)
 void TomboyNotesResource::onCollectionsRetrieved(KJob *kjob)
 {
     auto job = qobject_cast<TomboyCollectionsDownloadJob*>(kjob);
-    if (job->error()) {
+    if (!job->errorString().isEmpty()) {
         cancelTask();
         showError(job->errorText());
         return;
@@ -106,11 +106,23 @@ void TomboyNotesResource::onCollectionsRetrieved(KJob *kjob)
     collectionsRetrieved(job->collections());
 }
 
+void TomboyNotesResource::onItemChangeCommitted(KJob *kjob)
+{
+    auto job = qobject_cast<TomboyItemUploadJob*>(kjob);
+    if (!job->errorString().isEmpty()) {
+        cancelTask();
+        showError(job->errorText());
+        return;
+    }
+
+    changeCommitted(job->item());
+}
+
 void TomboyNotesResource::onItemRetrieved(KJob *kjob)
 {
     auto job = qobject_cast<TomboyItemDownloadJob*>(kjob);
 
-    if (job->error()) {
+    if (!job->errorString().isEmpty()) {
         cancelTask();
         showError(job->errorText());
         return;
@@ -123,7 +135,7 @@ void TomboyNotesResource::onItemRetrieved(KJob *kjob)
 void TomboyNotesResource::onItemsRetrieved(KJob *kjob)
 {
     auto job = qobject_cast<TomboyItemsDownloadJob*>(kjob);
-    if (job->error()) {
+    if (!job->errorString().isEmpty()) {
         cancelTask();
         showError(job->errorText());
         return;
@@ -175,21 +187,39 @@ void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Co
 {
     if (Settings::readOnly() || configurationValid()) {
         cancelTask("Resource is read-only");
+        return;
     }
+
+    auto job = new TomboyItemUploadJob(item, JobType::modifyItem, this);
+    job->setServerURL(Settings::serverURL(), Settings::username());
+    connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
+    job->start();
 }
 
 void TomboyNotesResource::itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &parts)
 {
     if (Settings::readOnly() || configurationValid()) {
             cancelTask("Resource is read-only");
+            return;
     }
+
+    auto job = new TomboyItemUploadJob(item, JobType::modifyItem, this);
+    job->setServerURL(Settings::serverURL(), Settings::username());
+    connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
+    job->start();
 }
 
 void TomboyNotesResource::itemRemoved(const Akonadi::Item &item)
 {
     if (Settings::readOnly() || configurationValid()) {
             cancelTask("Resource is read-only");
+            return;
     }
+
+    auto job = new TomboyItemUploadJob(item, JobType::modifyItem, this);
+    job->setServerURL(Settings::serverURL(), Settings::username());
+    connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
+    job->start();
 }
 
 bool TomboyNotesResource::configurationValid()

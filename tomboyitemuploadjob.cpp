@@ -1,13 +1,16 @@
 #include "debug.h"
 #include "tomboyitemuploadjob.h"
 
+#include <QJsonArray>
 #include <QJsonDocument>
+#include <QJsonObject>
 
-TomboyItemUploadJob::TomboyItemUploadJob(const Akonadi::Item &item, QObject *parent)
+TomboyItemUploadJob::TomboyItemUploadJob(const Akonadi::Item &item, JobType jobType, QObject *parent)
     : TomboyJobBase(parent)
 {
     mSourceItem = Akonadi::Item(item);
     mNoteContent = item.payload<KMime::Message::Ptr>();
+    mJobType = jobType;
 }
 
 Akonadi::Item TomboyItemUploadJob::item() const
@@ -38,4 +41,26 @@ void TomboyItemUploadJob::onRequestFinished()
 
     // Parse received data as JSON
     QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
+
+    QJsonObject jo = document.object();
+    QJsonArray notes = jo["notes"].toArray();
+
+    // Check if server status is as expected
+    bool found = false;
+    foreach (auto note, notes) {
+        if (note.toObject()["guid"].toString() == mSourceItem.remoteId()) {
+            found = true;
+            break;
+        }
+    }
+    if (mJobType == JobType::deleteItem && found) {
+        setError(0);
+        setErrorText("Sync error. Server status not as expected!");
+        return;
+    }
+    if (mJobType != JobType::deleteItem && !found) {
+        setError(0);
+        setErrorText("Sync error. Server status not as expected!");
+        return;
+    }
 }
