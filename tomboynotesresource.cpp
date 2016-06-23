@@ -4,6 +4,7 @@
 #include "tomboycollectionsdownloadjob.h"
 #include "tomboyitemdownloadjob.h"
 #include "tomboyitemsdownloadjob.h"
+#include "tomboyitemuploadjob.h"
 #include "tomboynotesresource.h"
 #include "settings.h"
 #include "settingsadaptor.h"

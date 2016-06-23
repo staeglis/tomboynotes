@@ -1,6 +1,7 @@
 #ifndef TOMBOYITEMUPLOADJOB_H
 #define TOMBOYITEMUPLOADJOB_H
 
+#include <QJsonObject>
 #include <AkonadiAgentBase/ResourceBase>
 #include "tomboyjobbase.h"
 
@@ -18,6 +19,9 @@ private Q_SLOTS:
     // This will be called once the request is finished. You process the response
     // and emitResult(), to which your code in the resource will react.
     void onRequestFinished();
+
+private:
+    QJsonObject resultItem;
 };
 
 #endif // TOMBOYITEMUPLOADJOB_H

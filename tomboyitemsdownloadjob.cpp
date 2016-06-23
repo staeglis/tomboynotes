@@ -2,7 +2,7 @@
 #include "tomboyitemsdownloadjob.h"
 #include <QJsonArray>
 #include <QJsonDocument>
-#include <QJsonObject>>
+#include <QJsonObject>
 
 
 TomboyItemsDownloadJob::TomboyItemsDownloadJob(const Akonadi::Collection::Id &id, QObject *parent)
