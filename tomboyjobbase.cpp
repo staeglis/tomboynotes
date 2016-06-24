@@ -9,10 +9,11 @@ TomboyJobBase::TomboyJobBase(QObject *parent)
     requestor = new O1Requestor(manager, o1, this);
 }
 
-void TomboyJobBase::setServerURL(const QString &url, const QString &username)
+void TomboyJobBase::setServerURL(const QString &apiurl, const QString &contenturl)
 {
-    o1->setBaseURL(url);
-    userURL = url + "/api/1.0/" + username;
+    o1->setBaseURL(apiurl);
+    mApiURL = apiurl + "/api/1.0";
+    mContentURL = contenturl;
 }
 
 void TomboyJobBase::setAuthentication(const QString &token, const QString &secret)

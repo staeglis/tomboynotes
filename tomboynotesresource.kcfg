@@ -10,9 +10,9 @@
       <label>The URL to the tomboy sync server</label>
       <default>http://localhost/owncloud/index.php/apps/grauphel</default>
     </entry>
-    <entry name="username" type="String">
-      <label>The username of the tomboy sync server</label>
-      <default>admin</default>
+    <entry name="contentURL" type="String">
+      <label>The URL to the notes on the tomboy sync server</label>
+      <default></default>
     </entry>
     <entry name="requestToken" type="String">
       <label>The request token to the tomboy sync server</label>

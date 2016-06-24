@@ -20,7 +20,7 @@ class TomboyJobBase : public KCompositeJob
 public:
     explicit TomboyJobBase(QObject *parent = Q_NULLPTR);
 
-    void setServerURL(const QString &url, const QString &username);
+    void setServerURL(const QString &apiurl, const QString &contenturl);
     void setAuthentication(const QString &token, const QString &secret);
 
 protected:
@@ -29,7 +29,8 @@ protected:
     O1Tomboy *o1;
     QNetworkReply *mReply;
 
-    QString userURL;
+    QString mApiURL;
+    QString mContentURL;
 
     TomboyJobError checkReplyError();
 };

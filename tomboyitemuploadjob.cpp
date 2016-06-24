@@ -59,7 +59,7 @@ void TomboyItemUploadJob::start()
     postData.setObject(postJson);
 
     // Network request
-    QNetworkRequest request(userURL + "/notes" );
+    QNetworkRequest request(mContentURL);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json; boundary=7d44e178b0439");
     request.setHeader(QNetworkRequest::ContentLengthHeader, postData.toJson().length());
     mReply = requestor->put(request, QList<O0RequestParameter>(), postData.toJson());

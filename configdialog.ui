@@ -52,16 +52,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Type in the username:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="kcfg_username"/>
-       </item>
-       <item>
         <widget class="QCheckBox" name="kcfg_ReadOnly">
          <property name="text">
           <string>Open in read-only mode</string>

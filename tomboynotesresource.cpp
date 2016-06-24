@@ -42,7 +42,7 @@ void TomboyNotesResource::retrieveCollections()
 
     auto job = new TomboyCollectionsDownloadJob(this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
-    job->setServerURL(Settings::serverURL(), Settings::username());
+    job->setServerURL(Settings::serverURL(), Settings::contentURL());
     // connect to its result() signal
     connect(job, &KJob::result, this, &TomboyNotesResource::onCollectionsRetrieved);
     job->start();
@@ -55,7 +55,7 @@ void TomboyNotesResource::retrieveItems(const Akonadi::Collection &collection)
     // create the job
     auto job = new TomboyItemsDownloadJob(collection.id(), this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
-    job->setServerURL(Settings::serverURL(), Settings::username());
+    job->setServerURL(Settings::serverURL(), Settings::contentURL());
     // connect to its result() signal
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemsRetrieved);
     job->start();
@@ -69,7 +69,7 @@ bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QBy
     // this method is called when Akonadi wants more data for a given item.
     auto job = new TomboyItemDownloadJob(item, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
-    job->setServerURL(Settings::serverURL(), Settings::username());
+    job->setServerURL(Settings::serverURL(), Settings::contentURL());
     // connect to its result() signal
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemRetrieved);
     job->start();
@@ -86,6 +86,7 @@ void TomboyNotesResource::onAuthorizationFinished(KJob *kjob)
     if (job->error() == TomboyJobError::NoError) {
         Settings::setRequestToken(job->getRequestToken());
         Settings::setRequestTokenSecret(job->getRequestTokenSecret());
+        Settings::setContentURL(job->getContentUrl());
         Settings::self()->save();
         synchronizeCollectionTree();
     }
@@ -119,7 +120,7 @@ void TomboyNotesResource::onItemChangeCommitted(KJob *kjob)
         return;
     case TomboyJobError::NoError:
         changeCommitted(job->item());
-        //synchronize();
+        synchronize();
         return;
     }
 }
@@ -179,7 +180,7 @@ void TomboyNotesResource::configure(WId windowId)
     if (configurationNotValid())
     {
         auto job = new TomboyServerAuthenticateJob(this);
-        job->setServerURL(Settings::serverURL(), Settings::username());
+        job->setServerURL(Settings::serverURL(), Settings::contentURL());
         connect(job, &KJob::result, this, &TomboyNotesResource::onAuthorizationFinished);
         job->start();
         qCDebug(log_tomboynotesresource) << "Authorization job started";
@@ -198,7 +199,7 @@ void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Co
 
     auto job = new TomboyItemUploadJob(item, JobType::addItem, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
-    job->setServerURL(Settings::serverURL(), Settings::username());
+    job->setServerURL(Settings::serverURL(), Settings::contentURL());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
     job->start();
 }
@@ -213,7 +214,7 @@ void TomboyNotesResource::itemChanged(const Akonadi::Item &item, const QSet<QByt
 
     auto job = new TomboyItemUploadJob(item, JobType::modifyItem, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
-    job->setServerURL(Settings::serverURL(), Settings::username());
+    job->setServerURL(Settings::serverURL(), Settings::contentURL());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
     job->start();
 }
@@ -227,14 +228,14 @@ void TomboyNotesResource::itemRemoved(const Akonadi::Item &item)
 
     auto job = new TomboyItemUploadJob(item, JobType::deleteItem, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
-    job->setServerURL(Settings::serverURL(), Settings::username());
+    job->setServerURL(Settings::serverURL(), Settings::contentURL());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
     job->start();
 }
 
 bool TomboyNotesResource::configurationNotValid()
 {
-    return Settings::requestToken().isEmpty() || Settings::requestToken().isEmpty();
+    return Settings::requestToken().isEmpty() || Settings::requestToken().isEmpty() || Settings::contentURL().isEmpty();
 }
 
 void TomboyNotesResource::retryAfterFailure(const QString &errorMessage)

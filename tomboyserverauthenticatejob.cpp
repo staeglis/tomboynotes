@@ -1,4 +1,8 @@
 #include <QDesktopServices>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include "debug.h"
 #include "tomboyserverauthenticatejob.h"
 
 TomboyServerAuthenticateJob::TomboyServerAuthenticateJob(QObject *parent)
@@ -27,6 +31,11 @@ QString TomboyServerAuthenticateJob::getRequestTokenSecret()
     return o1->getRequestTokenSecret();
 }
 
+QString TomboyServerAuthenticateJob::getContentUrl()
+{
+    return mContentURL;
+}
+
 void TomboyServerAuthenticateJob::onLinkingFailed()
 {
     setError(TomboyJobError::PermanentError);
@@ -36,8 +45,11 @@ void TomboyServerAuthenticateJob::onLinkingFailed()
 
 void TomboyServerAuthenticateJob::onLinkingSucceeded()
 {
-    setError(TomboyJobError::NoError);
-    emitResult();
+    QNetworkRequest request(mApiURL);
+    mReply = requestor->get(request, QList<O0RequestParameter>());
+
+    connect(mReply, &QNetworkReply::finished, this, &TomboyServerAuthenticateJob::onApiRequestFinished);
+    qCDebug(log_tomboynotesresource) << "TomboyServerAuthenticateJob: Start network request";
 }
 
 void TomboyServerAuthenticateJob::onLinkedChanged()
@@ -53,4 +65,46 @@ void TomboyServerAuthenticateJob::onOpenBrowser(const QUrl &url)
 void TomboyServerAuthenticateJob::onCloseBrowser()
 {
 
+}
+
+void TomboyServerAuthenticateJob::onApiRequestFinished()
+{
+    checkReplyError();
+    if (error() != TomboyJobError::NoError)
+    {
+        setErrorText(mReply->errorString());
+        emitResult();
+        return;
+    }
+
+    // Parse received data as JSON and get user-href
+    QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
+    QJsonObject jo = document.object();
+    QString userURL = jo["user-ref"].toObject()["api-ref"].toString();
+
+    QNetworkRequest request(userURL);
+    mReply = requestor->get(request, QList<O0RequestParameter>());
+
+    connect(mReply, &QNetworkReply::finished, this, &TomboyServerAuthenticateJob::onUserRequestFinished);
+    qCDebug(log_tomboynotesresource) << "TomboyServerAuthenticateJob: Start network request";
+}
+
+void TomboyServerAuthenticateJob::onUserRequestFinished()
+{
+    checkReplyError();
+    if (error() != TomboyJobError::NoError)
+    {
+        setErrorText(mReply->errorString());
+        emitResult();
+        return;
+    }
+
+    // Parse received data as JSON and get contentURL
+    QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
+    QJsonObject jo = document.object();
+    mContentURL = jo["notes-ref"].toObject()["api-ref"].toString();
+
+    QDesktopServices::openUrl(QUrl("hallo.du.test"));
+    setError(TomboyJobError::NoError);
+    emitResult();
 }

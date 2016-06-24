@@ -20,7 +20,7 @@ void TomboyCollectionsDownloadJob::start()
 {
     // Get user informations
     QList<O0RequestParameter> requestParams = QList<O0RequestParameter>();
-    QNetworkRequest request(userURL);
+    QNetworkRequest request(mContentURL);
     mReply = requestor->get(request, requestParams);
 
     connect(mReply, &QNetworkReply::finished, this, &TomboyCollectionsDownloadJob::onRequestFinished);
@@ -48,7 +48,7 @@ void TomboyCollectionsDownloadJob::onRequestFinished()
 
     Akonadi::Collection c;
     c.setParentCollection( Akonadi::Collection::root());
-    c.setRemoteId( userURL );
+    c.setRemoteId( mContentURL );
     c.setName( "Tomboy Notes");
     c.setRemoteRevision(QString::number(collectionRevision.toInt()));
     qCDebug(log_tomboynotesresource) << "TomboyCollectionsDownloadJob: Sync revision " << collectionRevision.toString();

@@ -33,7 +33,6 @@ ConfigDialog::ConfigDialog(Settings* settings, QWidget *parent) :
     }
 
     ui->kcfg_ServerURL->setReadOnly(!mSettings->requestToken().isEmpty());
-    ui->kcfg_username->setReadOnly(!mSettings->requestToken().isEmpty());
 }
 
 ConfigDialog::~ConfigDialog()
@@ -48,7 +47,7 @@ ConfigDialog::~ConfigDialog()
 
 void ConfigDialog::saveSettings()
 {
-    if ( (ui->kcfg_ServerURL->text() != mSettings->serverURL()) || (ui->kcfg_username->text() != mSettings->username()) ) {
+    if ( (ui->kcfg_ServerURL->text() != mSettings->serverURL()) ) {
         mSettings->setRequestToken("");
         mSettings->setRequestTokenSecret("");
     }

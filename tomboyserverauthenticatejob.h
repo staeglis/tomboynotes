@@ -13,6 +13,7 @@ public:
 
     QString getRequestToken();
     QString getRequestTokenSecret();
+    QString getContentUrl();
 
     void start() Q_DECL_OVERRIDE;
 
@@ -22,6 +23,9 @@ private Q_SLOTS:
     void onLinkedChanged();
     void onOpenBrowser(const QUrl &url);
     void onCloseBrowser();
+
+    void onApiRequestFinished();
+    void onUserRequestFinished();
 
 };
 
