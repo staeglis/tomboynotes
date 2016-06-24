@@ -46,6 +46,7 @@ protected:
 private:
     bool configurationNotValid();
 
+    void retryAfterFailure(const QString &errorMessage);
     // Status handling
     void showError(const QString errorText);
     QTimer *mStatusMessageTimer;

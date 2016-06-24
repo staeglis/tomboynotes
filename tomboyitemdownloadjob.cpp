@@ -28,10 +28,11 @@ void TomboyItemDownloadJob::start()
 
 void TomboyItemDownloadJob::onRequestFinished()
 {
-    if (mReply->error() != QNetworkReply::NoError)
+    checkReplyError();
+    if (error() != TomboyJobError::NoError)
     {
         setErrorText(mReply->errorString());
-        setError(mReply->error());
+        emitResult();
         return;
     }
     qCDebug(log_tomboynotesresource) << "TomboyItemDownloadJob: Network request finished. No error occured";

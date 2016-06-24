@@ -7,6 +7,13 @@
 #include "o1tomboy.h"
 #include "o1requestor.h"
 
+enum TomboyJobError
+{
+    NoError,
+    TemporaryError,
+    PermanentError
+};
+
 class TomboyJobBase : public KCompositeJob
 {
      Q_OBJECT
@@ -23,6 +30,8 @@ protected:
     QNetworkReply *mReply;
 
     QString userURL;
+
+    TomboyJobError checkReplyError();
 };
 
 #endif // TOMBOYJOBBASE_H

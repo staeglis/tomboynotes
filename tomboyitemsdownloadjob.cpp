@@ -29,10 +29,11 @@ void TomboyItemsDownloadJob::start()
 void TomboyItemsDownloadJob::onRequestFinished()
 {
     qCDebug(log_tomboynotesresource) << "TomboyItemsDownloadJob: Network request finished";
-    if (mReply->error() != QNetworkReply::NoError)
+    checkReplyError();
+    if (error() != TomboyJobError::NoError)
     {
         setErrorText(mReply->errorString());
-        setError(mReply->error());
+        emitResult();
         return;
     }
 
@@ -49,5 +50,6 @@ void TomboyItemsDownloadJob::onRequestFinished()
         qCDebug(log_tomboynotesresource) << "TomboyItemsDownloadJob: Retriving note with id" << item.remoteId();
     }
 
+    setError(TomboyJobError::NoError);
     emitResult();
 }

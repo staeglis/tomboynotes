@@ -83,7 +83,7 @@ void TomboyNotesResource::onAuthorizationFinished(KJob *kjob)
     // Saves the received client authentication data in the settings
     qCDebug(log_tomboynotesresource) << "Authorization job finished";
     auto job = qobject_cast<TomboyServerAuthenticateJob*>(kjob);
-    if (job->errorString().isEmpty()) {
+    if (job->error() == TomboyJobError::NoError) {
         Settings::setRequestToken(job->getRequestToken());
         Settings::setRequestTokenSecret(job->getRequestTokenSecret());
         Settings::self()->save();
@@ -97,7 +97,7 @@ void TomboyNotesResource::onAuthorizationFinished(KJob *kjob)
 void TomboyNotesResource::onCollectionsRetrieved(KJob *kjob)
 {
     auto job = qobject_cast<TomboyCollectionsDownloadJob*>(kjob);
-    if (!job->errorString().isEmpty()) {
+    if (job->error() != TomboyJobError::NoError) {
         cancelTask();
         showError(job->errorText());
         return;
@@ -109,26 +109,26 @@ void TomboyNotesResource::onCollectionsRetrieved(KJob *kjob)
 void TomboyNotesResource::onItemChangeCommitted(KJob *kjob)
 {
     auto job = qobject_cast<TomboyItemUploadJob*>(kjob);
-    if (!job->errorString().isEmpty()) {
+    switch (job->error()) {
+    case TomboyJobError::PermanentError:
         cancelTask();
         showError(job->errorText());
         return;
-    }
-
-    if (job->jobType() == JobType::deleteItem) {
-        changeProcessed();
-    }
-    else {
+    case TomboyJobError::TemporaryError:
+        retryAfterFailure(job->errorString());
+        return;
+    case TomboyJobError::NoError:
         changeCommitted(job->item());
+        //synchronize();
+        return;
     }
-    //synchronize();
 }
 
 void TomboyNotesResource::onItemRetrieved(KJob *kjob)
 {
     auto job = qobject_cast<TomboyItemDownloadJob*>(kjob);
 
-    if (!job->errorString().isEmpty()) {
+    if (job->error() != TomboyJobError::NoError) {
         cancelTask();
         showError(job->errorText());
         return;
@@ -141,7 +141,7 @@ void TomboyNotesResource::onItemRetrieved(KJob *kjob)
 void TomboyNotesResource::onItemsRetrieved(KJob *kjob)
 {
     auto job = qobject_cast<TomboyItemsDownloadJob*>(kjob);
-    if (!job->errorString().isEmpty()) {
+    if (job->error() != TomboyJobError::NoError) {
         cancelTask();
         showError(job->errorText());
         return;
@@ -235,6 +235,13 @@ void TomboyNotesResource::itemRemoved(const Akonadi::Item &item)
 bool TomboyNotesResource::configurationNotValid()
 {
     return Settings::requestToken().isEmpty() || Settings::requestToken().isEmpty();
+}
+
+void TomboyNotesResource::retryAfterFailure(const QString &errorMessage)
+{
+    Q_EMIT status(Broken, errorMessage);
+    deferTask();
+    setTemporaryOffline(Settings::self()->refreshInterval() <= 0 ? 300 : Settings::self()->refreshInterval() * 60);
 }
 
 void TomboyNotesResource::showError(const QString errorText)

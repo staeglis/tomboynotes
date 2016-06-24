@@ -69,10 +69,11 @@ void TomboyItemUploadJob::start()
 
 void TomboyItemUploadJob::onRequestFinished()
 {
-    if (mReply->error() != QNetworkReply::NoError)
+    checkReplyError();
+    if (error() != TomboyJobError::NoError)
     {
         setErrorText(mReply->errorString());
-        setError(mReply->error());
+        emitResult();
         return;
     }
     qCDebug(log_tomboynotesresource) << "TomboyItemUploadJob: Network request finished. No error occured";
@@ -90,13 +91,17 @@ void TomboyItemUploadJob::onRequestFinished()
         break;
     }
     if (mJobType == JobType::deleteItem && found) {
-        setError(0);
+        setError(TomboyJobError::PermanentError);
         setErrorText("Sync error. Server status not as expected!");
+        emitResult();
         return;
     }
     if (mJobType != JobType::deleteItem && !found) {
-        setError(0);
+        setError(TomboyJobError::PermanentError);
         setErrorText("Sync error. Server status not as expected!");
+        emitResult();
         return;
     }
+    setError(TomboyJobError::NoError);
+    emitResult();
 }

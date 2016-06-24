@@ -30,10 +30,11 @@ void TomboyCollectionsDownloadJob::start()
 void TomboyCollectionsDownloadJob::onRequestFinished()
 {
     qCDebug(log_tomboynotesresource) << "TomboyCollectionsDownloadJob: Network request finished";
-    if (mReply->error() != QNetworkReply::NoError)
+    checkReplyError();
+    if (error() != TomboyJobError::NoError)
     {
         setErrorText(mReply->errorString());
-        setError(mReply->error());
+        emitResult();
         return;
     }
 

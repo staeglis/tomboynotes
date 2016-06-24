@@ -19,3 +19,19 @@ void TomboyJobBase::setAuthentication(const QString &token, const QString &secre
 {
     o1->restoreAuthData(token, secret);
 }
+
+TomboyJobError TomboyJobBase::checkReplyError()
+{
+    switch (mReply->error()) {
+    case QNetworkReply::NoError :
+        return TomboyJobError::NoError;
+        break;
+    case QNetworkReply::RemoteHostClosedError:
+    case QNetworkReply::HostNotFoundError:
+    case QNetworkReply::TimeoutError:
+        return TomboyJobError::TemporaryError;
+        break;
+    default:
+        return TomboyJobError::PermanentError;
+    }
+}

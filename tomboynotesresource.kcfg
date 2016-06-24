@@ -30,5 +30,9 @@
       <label>Do not change the actual backend data.</label>
       <default>true</default>
     </entry>
+    <entry name="refreshInterval" type="Int">
+      <label>Refresh every</label>
+      <default>5</default>
+    </entry>
   </group>
 </kcfg>

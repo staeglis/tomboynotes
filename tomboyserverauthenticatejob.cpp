@@ -29,13 +29,14 @@ QString TomboyServerAuthenticateJob::getRequestTokenSecret()
 
 void TomboyServerAuthenticateJob::onLinkingFailed()
 {
-    setError(1);
+    setError(TomboyJobError::PermanentError);
     setErrorText("Authorization has been failed!");
     emitResult();
 }
 
 void TomboyServerAuthenticateJob::onLinkingSucceeded()
 {
+    setError(TomboyJobError::NoError);
     emitResult();
 }
 
