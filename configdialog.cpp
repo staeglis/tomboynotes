@@ -1,8 +1,7 @@
-#include "configdialog.h"
-#include "ui_configdialog.h"
-#include "settings.h"
-
 #include <kconfigdialogmanager.h>
+#include "configdialog.h"
+#include "settings.h"
+#include "ui_configdialog.h"
 
 ConfigDialog::ConfigDialog(Settings* settings, QWidget *parent) :
     QDialog(parent),

@@ -1,10 +1,9 @@
-#include "debug.h"
-#include "tomboycollectionsdownloadjob.h"
-
 #include <QDesktopServices>
 #include <QJsonDocument>
 #include <QJsonObject>>
 #include <QJsonValue>
+#include "debug.h"
+#include "tomboycollectionsdownloadjob.h"
 
 TomboyCollectionsDownloadJob::TomboyCollectionsDownloadJob(QObject *parent)
     : TomboyJobBase(parent)
@@ -19,9 +18,8 @@ Akonadi::Collection::List TomboyCollectionsDownloadJob::collections()
 void TomboyCollectionsDownloadJob::start()
 {
     // Get user informations
-    QList<O0RequestParameter> requestParams = QList<O0RequestParameter>();
     QNetworkRequest request(mContentURL);
-    mReply = requestor->get(request, requestParams);
+    mReply = mRequestor->get(request, QList<O0RequestParameter>());
 
     connect(mReply, &QNetworkReply::finished, this, &TomboyCollectionsDownloadJob::onRequestFinished);
     qCDebug(log_tomboynotesresource) << "TomboyCollectionsDownloadJob: Start network request";

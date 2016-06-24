@@ -1,26 +1,26 @@
-#include "debug.h"
-#include "tomboyitemsdownloadjob.h"
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include "debug.h"
+#include "tomboyitemsdownloadjob.h"
 
 
 TomboyItemsDownloadJob::TomboyItemsDownloadJob(const Akonadi::Collection::Id &id, QObject *parent)
     : TomboyJobBase(parent)
 {
-    collectionId = id;
+    mCollectionId = id;
 }
 
 Akonadi::Item::List TomboyItemsDownloadJob::items() const
 {
-    return resultItems;
+    return mResultItems;
 }
 
 void TomboyItemsDownloadJob::start()
 {
     // Get all notes
     QNetworkRequest request(mContentURL);
-    mReply = requestor->get(request, QList<O0RequestParameter>());
+    mReply = mRequestor->get(request, QList<O0RequestParameter>());
 
     connect(mReply, &QNetworkReply::finished, this, &TomboyItemsDownloadJob::onRequestFinished);
     qCDebug(log_tomboynotesresource) << "TomboyItemsDownloadJob: Start network request";
@@ -46,7 +46,7 @@ void TomboyItemsDownloadJob::onRequestFinished()
     foreach (auto note, notes) {
         Akonadi::Item item( "text/x-vnd.akonadi.note" );
         item.setRemoteId(note.toObject()["guid"].toString());
-        resultItems << item;
+        mResultItems << item;
         qCDebug(log_tomboynotesresource) << "TomboyItemsDownloadJob: Retriving note with id" << item.remoteId();
     }
 

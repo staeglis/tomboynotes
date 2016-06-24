@@ -1,9 +1,9 @@
 #ifndef TOMBOYJOBBASE_H
 #define TOMBOYJOBBASE_H
 
+#include <QString>
 #include <KIO/AccessManager>
 #include <kcompositejob.h>
-#include <QString>
 #include "o1tomboy.h"
 #include "o1requestor.h"
 
@@ -24,9 +24,9 @@ public:
     void setAuthentication(const QString &token, const QString &secret);
 
 protected:
-    KIO::Integration::AccessManager *manager;
-    O1Requestor *requestor;
-    O1Tomboy *o1;
+    KIO::Integration::AccessManager *mManager;
+    O1Requestor *mRequestor;
+    O1Tomboy *mO1;
     QNetworkReply *mReply;
 
     QString mApiURL;

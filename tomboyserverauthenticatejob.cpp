@@ -9,26 +9,26 @@ TomboyServerAuthenticateJob::TomboyServerAuthenticateJob(QObject *parent)
     : TomboyJobBase(parent)
 {
     // Connect the o2 authenfication signals
-    connect(o1, SIGNAL(linkedChanged()), this, SLOT(onLinkedChanged()));
-    connect(o1, SIGNAL(linkingFailed()), this, SLOT(onLinkingFailed()));
-    connect(o1, SIGNAL(linkingSucceeded()), this, SLOT(onLinkingSucceeded()));
-    connect(o1, SIGNAL(openBrowser(QUrl)), this, SLOT(onOpenBrowser(QUrl)));
-    connect(o1, SIGNAL(closeBrowser()), this, SLOT(onCloseBrowser()));
+    connect(mO1, SIGNAL(linkedChanged()), this, SLOT(onLinkedChanged()));
+    connect(mO1, SIGNAL(linkingFailed()), this, SLOT(onLinkingFailed()));
+    connect(mO1, SIGNAL(linkingSucceeded()), this, SLOT(onLinkingSucceeded()));
+    connect(mO1, SIGNAL(openBrowser(QUrl)), this, SLOT(onOpenBrowser(QUrl)));
+    connect(mO1, SIGNAL(closeBrowser()), this, SLOT(onCloseBrowser()));
 }
 
 void TomboyServerAuthenticateJob::start()
 {
-    o1->link();
+    mO1->link();
 }
 
 QString TomboyServerAuthenticateJob::getRequestToken()
 {
-    return o1->getRequestToken();
+    return mO1->getRequestToken();
 }
 
 QString TomboyServerAuthenticateJob::getRequestTokenSecret()
 {
-    return o1->getRequestTokenSecret();
+    return mO1->getRequestTokenSecret();
 }
 
 QString TomboyServerAuthenticateJob::getContentUrl()
@@ -46,7 +46,7 @@ void TomboyServerAuthenticateJob::onLinkingFailed()
 void TomboyServerAuthenticateJob::onLinkingSucceeded()
 {
     QNetworkRequest request(mApiURL);
-    mReply = requestor->get(request, QList<O0RequestParameter>());
+    mReply = mRequestor->get(request, QList<O0RequestParameter>());
 
     connect(mReply, &QNetworkReply::finished, this, &TomboyServerAuthenticateJob::onApiRequestFinished);
     qCDebug(log_tomboynotesresource) << "TomboyServerAuthenticateJob: Start network request";
@@ -83,7 +83,7 @@ void TomboyServerAuthenticateJob::onApiRequestFinished()
     QString userURL = jo["user-ref"].toObject()["api-ref"].toString();
 
     QNetworkRequest request(userURL);
-    mReply = requestor->get(request, QList<O0RequestParameter>());
+    mReply = mRequestor->get(request, QList<O0RequestParameter>());
 
     connect(mReply, &QNetworkReply::finished, this, &TomboyServerAuthenticateJob::onUserRequestFinished);
     qCDebug(log_tomboynotesresource) << "TomboyServerAuthenticateJob: Start network request";
@@ -104,7 +104,6 @@ void TomboyServerAuthenticateJob::onUserRequestFinished()
     QJsonObject jo = document.object();
     mContentURL = jo["notes-ref"].toObject()["api-ref"].toString();
 
-    QDesktopServices::openUrl(QUrl("hallo.du.test"));
     setError(TomboyJobError::NoError);
     emitResult();
 }

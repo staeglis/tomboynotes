@@ -1,10 +1,9 @@
-#include "debug.h"
-#include "tomboyitemuploadjob.h"
-
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <krandom.h>
+#include "debug.h"
+#include "tomboyitemuploadjob.h"
 
 TomboyItemUploadJob::TomboyItemUploadJob(const Akonadi::Item &item, JobType jobType, QObject *parent)
     : TomboyJobBase(parent)
@@ -62,7 +61,7 @@ void TomboyItemUploadJob::start()
     QNetworkRequest request(mContentURL);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json; boundary=7d44e178b0439");
     request.setHeader(QNetworkRequest::ContentLengthHeader, postData.toJson().length());
-    mReply = requestor->put(request, QList<O0RequestParameter>(), postData.toJson());
+    mReply = mRequestor->put(request, QList<O0RequestParameter>(), postData.toJson());
     connect(mReply, &QNetworkReply::finished, this, &TomboyItemUploadJob::onRequestFinished);
     qCDebug(log_tomboynotesresource) << "TomboyItemUploadJob: Start network request";
 }

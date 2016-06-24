@@ -4,21 +4,21 @@
 TomboyJobBase::TomboyJobBase(QObject *parent)
 {
     // Create the OAuth objects
-    o1 = new O1Tomboy(this);
-    manager = new KIO::AccessManager(this);
-    requestor = new O1Requestor(manager, o1, this);
+    mO1 = new O1Tomboy(this);
+    mManager = new KIO::AccessManager(this);
+    mRequestor = new O1Requestor(mManager, mO1, this);
 }
 
 void TomboyJobBase::setServerURL(const QString &apiurl, const QString &contenturl)
 {
-    o1->setBaseURL(apiurl);
+    mO1->setBaseURL(apiurl);
     mApiURL = apiurl + "/api/1.0";
     mContentURL = contenturl;
 }
 
 void TomboyJobBase::setAuthentication(const QString &token, const QString &secret)
 {
-    o1->restoreAuthData(token, secret);
+    mO1->restoreAuthData(token, secret);
 }
 
 TomboyJobError TomboyJobBase::checkReplyError()

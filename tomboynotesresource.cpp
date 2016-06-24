@@ -1,3 +1,5 @@
+#include <QtDBus/QDBusConnection>
+#include <kwindowsystem.h>
 #include "debug.h"
 #include "configdialog.h"
 #include "tomboyserverauthenticatejob.h"
@@ -8,9 +10,6 @@
 #include "tomboynotesresource.h"
 #include "settings.h"
 #include "settingsadaptor.h"
-
-#include <QtDBus/QDBusConnection>
-#include <kwindowsystem.h>
 
 using namespace Akonadi;
 

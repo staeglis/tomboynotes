@@ -21,7 +21,7 @@ private Q_SLOTS:
     void onRequestFinished();
 
 private:
-    Akonadi::Item resultItem;
+    Akonadi::Item mResultItem;
 };
 
 #endif // TOMBOYITEMDOWNLOADJOB_H
