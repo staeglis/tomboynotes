@@ -41,11 +41,11 @@ void TomboyItemUploadJob::start()
     if (mJobType == JobType::deleteItem) {
         jsonNote["command"] = "delete";
     }
-    else if (mNoteContent != NULL) {
+    else  {
         jsonNote["title"] = mNoteContent->headerByType("subject")->asUnicodeString();
         jsonNote["note-content"] = mNoteContent->mainBodyPart()->decodedText();
         jsonNote["note-content-version"] = "1";
-        jsonNote["last-change-date"] = mSourceItem.modificationTime().toString(Qt::ISODate);
+        jsonNote["last-change-date"] = mSourceItem.modificationTime().toString("yyyy-MM-ddThh-mm-ss.0000zzz-HH:00");
     }
 
     // Create the full JSON object

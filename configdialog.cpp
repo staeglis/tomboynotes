@@ -51,6 +51,10 @@ void ConfigDialog::saveSettings()
         mSettings->setRequestTokenSecret("");
     }
 
+    if(ui->kcfg_collectionName->text() == "") {
+        ui->kcfg_collectionName->setText("Tomboy Notes " + Settings::serverURL());
+    }
+
     mManager->updateSettings();
     mSettings->save();
 }

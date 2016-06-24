@@ -2,6 +2,7 @@
 
 
 TomboyJobBase::TomboyJobBase(QObject *parent)
+    : KCompositeJob(parent)
 {
     // Create the OAuth objects
     mO1 = new O1Tomboy(this);

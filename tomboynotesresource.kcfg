@@ -6,6 +6,10 @@
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <kcfgfile/>
   <group name="General">
+    <entry name="collectionName" type="String">
+      <label>The display name of this resource</label>
+      <default></default>
+    </entry>
     <entry name="ServerURL" type="String">
       <label>The URL to the tomboy sync server</label>
       <default>http://localhost/owncloud/index.php/apps/grauphel</default>

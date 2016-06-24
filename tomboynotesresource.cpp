@@ -1,15 +1,17 @@
 #include <QtDBus/QDBusConnection>
+#include <changerecorder.h>
 #include <kwindowsystem.h>
+#include <ItemFetchScope>
 #include "debug.h"
 #include "configdialog.h"
+#include "settings.h"
+#include "settingsadaptor.h"
 #include "tomboyserverauthenticatejob.h"
 #include "tomboycollectionsdownloadjob.h"
 #include "tomboyitemdownloadjob.h"
 #include "tomboyitemsdownloadjob.h"
 #include "tomboyitemuploadjob.h"
 #include "tomboynotesresource.h"
-#include "settings.h"
-#include "settingsadaptor.h"
 
 using namespace Akonadi;
 
@@ -20,6 +22,9 @@ TomboyNotesResource::TomboyNotesResource(const QString &id)
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Settings"),
                                                  Settings::self(),
                                                  QDBusConnection::ExportAdaptors);
+
+    // Akonadi:Item should always provide the payload
+    changeRecorder()->itemFetchScope().fetchFullPayload(true);
 
     // Status message stuff
     mStatusMessageTimer = new QTimer(this);
@@ -39,7 +44,7 @@ void TomboyNotesResource::retrieveCollections()
 {
     qCDebug(log_tomboynotesresource) << "Retriving collections started";
 
-    auto job = new TomboyCollectionsDownloadJob(this);
+    auto job = new TomboyCollectionsDownloadJob(Settings::collectionName(), this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     job->setServerURL(Settings::serverURL(), Settings::contentURL());
     // connect to its result() signal
@@ -51,6 +56,11 @@ void TomboyNotesResource::retrieveCollections()
 
 void TomboyNotesResource::retrieveItems(const Akonadi::Collection &collection)
 {
+    if (configurationNotValid()) {
+            cancelTask("Resource configuration is not valid");
+            return;
+    }
+
     // create the job
     auto job = new TomboyItemsDownloadJob(collection.id(), this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
@@ -64,6 +74,11 @@ void TomboyNotesResource::retrieveItems(const Akonadi::Collection &collection)
 bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts)
 {
     Q_UNUSED( parts );
+
+    if (configurationNotValid()) {
+            cancelTask("Resource configuration is not valid");
+            return false;
+    }
 
     // this method is called when Akonadi wants more data for a given item.
     auto job = new TomboyItemDownloadJob(item, this);
@@ -172,7 +187,7 @@ void TomboyNotesResource::configure(WId windowId)
             KWindowSystem::setMainWindow(&dialog, windowId);
     }
 
-    if (dialog.exec()) {
+    if (dialog.exec() == QDialog::Accepted) {
         dialog.saveSettings();
     }
 
@@ -191,6 +206,7 @@ void TomboyNotesResource::configure(WId windowId)
 
 void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)
 {
+    Q_UNUSED( collection );
     if (Settings::readOnly() || configurationNotValid()) {
         cancelTask("Resource is read-only");
         return;
@@ -206,7 +222,7 @@ void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Co
 void TomboyNotesResource::itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &parts)
 {
     Q_UNUSED( parts );
-    if (Settings::readOnly() || configurationNotValid() || true) {
+    if (Settings::readOnly() || configurationNotValid()) {
             cancelTask("Resource is read-only");
             return;
     }

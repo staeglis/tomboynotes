@@ -1,18 +1,19 @@
 #include <QDesktopServices>
 #include <QJsonDocument>
-#include <QJsonObject>>
+#include <QJsonObject>
 #include <QJsonValue>
 #include "debug.h"
 #include "tomboycollectionsdownloadjob.h"
 
-TomboyCollectionsDownloadJob::TomboyCollectionsDownloadJob(QObject *parent)
+TomboyCollectionsDownloadJob::TomboyCollectionsDownloadJob(const QString &collectionName, QObject *parent)
     : TomboyJobBase(parent)
 {
+    mCollectionName = collectionName;
 }
 
 Akonadi::Collection::List TomboyCollectionsDownloadJob::collections()
 {
-    return resultCollections;
+    return mResultCollections;
 }
 
 void TomboyCollectionsDownloadJob::start()
@@ -47,7 +48,7 @@ void TomboyCollectionsDownloadJob::onRequestFinished()
     Akonadi::Collection c;
     c.setParentCollection( Akonadi::Collection::root());
     c.setRemoteId( mContentURL );
-    c.setName( "Tomboy Notes");
+    c.setName( mCollectionName );
     c.setRemoteRevision(QString::number(collectionRevision.toInt()));
     qCDebug(log_tomboynotesresource) << "TomboyCollectionsDownloadJob: Sync revision " << collectionRevision.toString();
 
@@ -55,7 +56,7 @@ void TomboyCollectionsDownloadJob::onRequestFinished()
     mimeTypes << QLatin1String("text/x-vnd.akonadi.note");
     c.setContentMimeTypes( mimeTypes );
 
-    resultCollections << c;
+    mResultCollections << c;
 
     emitResult();
 }

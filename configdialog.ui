@@ -38,6 +38,16 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Display name:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="KLineEdit" name="kcfg_collectionName"/>
+       </item>
+       <item>
         <widget class="QLabel" name="label">
          <property name="text">
           <string>Type in the server URL:</string>
@@ -45,9 +55,9 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="kcfg_ServerURL">
-         <property name="text">
-          <string/>
+        <widget class="KLineEdit" name="kcfg_ServerURL">
+         <property name="toolTip">
+          <string>This value is not changeable after first setup</string>
          </property>
         </widget>
        </item>
@@ -94,6 +104,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
