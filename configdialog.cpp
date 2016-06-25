@@ -28,7 +28,7 @@ ConfigDialog::ConfigDialog(Settings* settings, QWidget *parent) :
     KConfigGroup group(KSharedConfig::openConfig(), "ConfigDialog");
     const QSize size = group.readEntry("Size", QSize(600, 400));
     if (size.isValid()) {
-            resize(size);
+        resize(size);
     }
 
     ui->kcfg_ServerURL->setReadOnly(!mSettings->requestToken().isEmpty());

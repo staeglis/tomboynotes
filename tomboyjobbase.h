@@ -16,7 +16,7 @@ enum TomboyJobError
 
 class TomboyJobBase : public KCompositeJob
 {
-     Q_OBJECT
+    Q_OBJECT
 public:
     explicit TomboyJobBase(QObject *parent = Q_NULLPTR);
 

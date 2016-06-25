@@ -59,8 +59,8 @@ void TomboyNotesResource::retrieveCollections()
 void TomboyNotesResource::retrieveItems(const Akonadi::Collection &collection)
 {
     if (configurationNotValid()) {
-            cancelTask("Resource configuration is not valid");
-            return;
+        cancelTask("Resource configuration is not valid");
+        return;
     }
 
     // create the job
@@ -78,8 +78,8 @@ bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QBy
     Q_UNUSED( parts );
 
     if (configurationNotValid()) {
-            cancelTask("Resource configuration is not valid");
-            return false;
+        cancelTask("Resource configuration is not valid");
+        return false;
     }
 
     // this method is called when Akonadi wants more data for a given item.
@@ -189,7 +189,7 @@ void TomboyNotesResource::configure(WId windowId)
     ConfigDialog dialog(Settings::self());
 
     if (windowId) {
-            KWindowSystem::setMainWindow(&dialog, windowId);
+        KWindowSystem::setMainWindow(&dialog, windowId);
     }
 
     if (dialog.exec() == QDialog::Accepted) {
@@ -235,8 +235,8 @@ void TomboyNotesResource::itemChanged(const Akonadi::Item &item, const QSet<QByt
 {
     Q_UNUSED( parts );
     if (Settings::readOnly() || configurationNotValid()) {
-            cancelTask("Resource is read-only");
-            return;
+        cancelTask("Resource is read-only");
+        return;
     }
 
     if (mUploadJobProcessRunning) {
@@ -255,8 +255,8 @@ void TomboyNotesResource::itemChanged(const Akonadi::Item &item, const QSet<QByt
 void TomboyNotesResource::itemRemoved(const Akonadi::Item &item)
 {
     if (Settings::readOnly() || configurationNotValid()) {
-            cancelTask("Resource is read-only");
-            return;
+        cancelTask("Resource is read-only");
+        return;
     }
 
     if (mUploadJobProcessRunning) {

@@ -27,8 +27,7 @@ public:
     void start() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
-    // This will be called once the request is finished. You process the response
-    // and emitResult(), to which your code in the resource will react.
+    // This will be called once the request is finished.
     void onRequestFinished();
 
 private:
