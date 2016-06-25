@@ -31,6 +31,9 @@ private Q_SLOTS:
     void onRequestFinished();
 
 private:
+    // Workaround for https://bugreports.qt-project.org/browse/QTBUG-26161 Qt bug
+    QString getCurrentISOTime();
+
     Akonadi::Item mSourceItem;
     KMime::Message::Ptr mNoteContent;
 

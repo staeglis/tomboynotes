@@ -43,12 +43,12 @@ void TomboyItemUploadJob::start()
         jsonNote["command"] = "delete";
         break;
     case JobType::addItem:
-        jsonNote["create-date"] = QDateTime::currentDateTime().toString(Qt::ISODate);
+        jsonNote["create-date"] = getCurrentISOTime();
     case JobType::modifyItem:
         jsonNote["title"] = mNoteContent->headerByType("subject")->asUnicodeString();
         jsonNote["note-content"] = mNoteContent->mainBodyPart()->decodedText();
         jsonNote["note-content-version"] = "1";
-        jsonNote["last-change-date"] = QDateTime::currentDateTime().toString(Qt::ISODate);
+        jsonNote["last-change-date"] = getCurrentISOTime();
     }
 
     // Create the full JSON object
@@ -109,4 +109,15 @@ void TomboyItemUploadJob::onRequestFinished()
 
     setError(TomboyJobError::NoError);
     emitResult();
+}
+
+QString TomboyItemUploadJob::getCurrentISOTime()
+{
+    QDateTime local = QDateTime::currentDateTime();
+    QDateTime utc = local.toUTC();
+    utc.setTimeSpec(Qt::LocalTime);
+    int utcOffset = utc.secsTo(local);
+    local.setUtcOffset(utcOffset);
+
+    return local.toString(Qt::ISODate);
 }
