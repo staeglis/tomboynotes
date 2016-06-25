@@ -18,6 +18,10 @@
       <label>The URL to the notes on the tomboy sync server</label>
       <default></default>
     </entry>
+    <entry name="userURL" type="String">
+      <label>The URL to the user data on the tomboy sync server</label>
+      <default></default>
+    </entry>
     <entry name="requestToken" type="String">
       <label>The request token to the tomboy sync server</label>
       <default></default>

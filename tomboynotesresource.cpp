@@ -32,6 +32,8 @@ TomboyNotesResource::TomboyNotesResource(const QString &id)
     connect(mStatusMessageTimer, &QTimer::timeout, this, &TomboyNotesResource::clearStatusMessage);
     connect(this, &AgentBase::error, this, &TomboyNotesResource::showError);
 
+    mUploadJobProcessRunning = false;
+
     qCDebug(log_tomboynotesresource) << "Resource started";
 }
 
@@ -46,7 +48,7 @@ void TomboyNotesResource::retrieveCollections()
 
     auto job = new TomboyCollectionsDownloadJob(Settings::collectionName(), this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
-    job->setServerURL(Settings::serverURL(), Settings::contentURL());
+    job->setServerURL(Settings::serverURL(), Settings::userURL());
     // connect to its result() signal
     connect(job, &KJob::result, this, &TomboyNotesResource::onCollectionsRetrieved);
     job->start();
@@ -101,8 +103,10 @@ void TomboyNotesResource::onAuthorizationFinished(KJob *kjob)
         Settings::setRequestToken(job->getRequestToken());
         Settings::setRequestTokenSecret(job->getRequestTokenSecret());
         Settings::setContentURL(job->getContentUrl());
+        Settings::setUserURL(job->getUserURL());
         Settings::self()->save();
         synchronizeCollectionTree();
+        synchronize();
     }
     else {
         showError(job->errorText());
@@ -124,6 +128,7 @@ void TomboyNotesResource::onCollectionsRetrieved(KJob *kjob)
 void TomboyNotesResource::onItemChangeCommitted(KJob *kjob)
 {
     auto job = qobject_cast<TomboyItemUploadJob*>(kjob);
+    mUploadJobProcessRunning = false;
     switch (job->error()) {
     case TomboyJobError::PermanentError:
         cancelTask();
@@ -194,7 +199,7 @@ void TomboyNotesResource::configure(WId windowId)
     if (configurationNotValid())
     {
         auto job = new TomboyServerAuthenticateJob(this);
-        job->setServerURL(Settings::serverURL(), Settings::contentURL());
+        job->setServerURL(Settings::serverURL(), "");
         connect(job, &KJob::result, this, &TomboyNotesResource::onAuthorizationFinished);
         job->start();
         qCDebug(log_tomboynotesresource) << "Authorization job started";
@@ -212,10 +217,15 @@ void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Co
         return;
     }
 
+    if (mUploadJobProcessRunning) {
+        retryAfterFailure("");
+    }
+
     auto job = new TomboyItemUploadJob(item, JobType::addItem, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     job->setServerURL(Settings::serverURL(), Settings::contentURL());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
+    mUploadJobProcessRunning = true;
     job->start();
 }
 
@@ -227,10 +237,15 @@ void TomboyNotesResource::itemChanged(const Akonadi::Item &item, const QSet<QByt
             return;
     }
 
+    if (mUploadJobProcessRunning) {
+        retryAfterFailure("");
+    }
+
     auto job = new TomboyItemUploadJob(item, JobType::modifyItem, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     job->setServerURL(Settings::serverURL(), Settings::contentURL());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
+    mUploadJobProcessRunning = true;
     job->start();
 }
 
@@ -241,10 +256,15 @@ void TomboyNotesResource::itemRemoved(const Akonadi::Item &item)
             return;
     }
 
+    if (mUploadJobProcessRunning) {
+        retryAfterFailure("");
+    }
+
     auto job = new TomboyItemUploadJob(item, JobType::deleteItem, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     job->setServerURL(Settings::serverURL(), Settings::contentURL());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
+    mUploadJobProcessRunning = true;
     job->start();
 }
 

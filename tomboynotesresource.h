@@ -50,6 +50,8 @@ private:
     // Status handling
     void showError(const QString errorText);
     QTimer *mStatusMessageTimer;
+
+    bool mUploadJobProcessRunning;
 };
 
 #endif

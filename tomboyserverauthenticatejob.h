@@ -14,6 +14,7 @@ public:
     QString getRequestToken();
     QString getRequestTokenSecret();
     QString getContentUrl();
+    QString getUserURL();
 
     void start() Q_DECL_OVERRIDE;
 
@@ -26,6 +27,9 @@ private Q_SLOTS:
 
     void onApiRequestFinished();
     void onUserRequestFinished();
+
+private:
+    QString mUserURL;
 
 };
 

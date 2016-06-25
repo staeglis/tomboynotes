@@ -46,7 +46,7 @@ ConfigDialog::~ConfigDialog()
 
 void ConfigDialog::saveSettings()
 {
-    if ( (ui->kcfg_ServerURL->text() != mSettings->serverURL()) ) {
+    if ( ui->kcfg_ServerURL->text() != mSettings->serverURL() ) {
         mSettings->setRequestToken("");
         mSettings->setRequestTokenSecret("");
     }
