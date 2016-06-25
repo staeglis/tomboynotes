@@ -1,0 +1,14 @@
+==== What's this ? ====
+This is an Akonadi resource for Tomboy-compatible note servers like Grauphel.
+
+==== Usage ====
+For this resource you need only the URL of your service,
+e.g. https://fqdn/index.php/apps/grauphel
+It is the same URL that you have used in Tomboy.
+For the registration process it will open a web page where you can log in
+with your username and password of your account of the note server.
+
+==== Tested with ====
+Today it's tested only with Grauphel. So it may be incompatible with
+other server implemantations (e.g. Rainy). But you are free to test it
+and to report your experiences.
