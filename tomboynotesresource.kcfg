@@ -36,7 +36,7 @@
     </entry>
     <entry name="ReadOnly" type="Bool">
       <label>Do not change the actual backend data.</label>
-      <default>true</default>
+      <default>false</default>
     </entry>
     <entry name="refreshInterval" type="Int">
       <label>Refresh every</label>
