@@ -139,6 +139,7 @@ void TomboyNotesResource::onItemChangeCommitted(KJob *kjob)
         return;
     case TomboyJobError::NoError:
         changeCommitted(job->item());
+        // The data should be actualized for the next UploadJob
         synchronize();
         return;
     }
@@ -192,6 +193,7 @@ void TomboyNotesResource::configure(WId windowId)
         KWindowSystem::setMainWindow(&dialog, windowId);
     }
 
+    // Run the configuration dialog an sve settings if accepted
     if (dialog.exec() == QDialog::Accepted) {
         dialog.saveSettings();
         setAgentName(Settings::collectionName());

@@ -59,7 +59,7 @@ void TomboyItemDownloadJob::onRequestFinished()
     akonadiNote->subject(true)->fromUnicodeString( jsonNote["title"].toString().toUtf8(), "utf-8" );
 
     // Set note content
-    akonadiNote->contentType()->setMimeType("text/html");
+    akonadiNote->contentType()->setMimeType("text/enriched");
     akonadiNote->contentType()->setCharset("utf-8");
     akonadiNote->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
     akonadiNote->mainBodyPart()->fromUnicodeString(jsonNote["note-content"].toString().toUtf8());

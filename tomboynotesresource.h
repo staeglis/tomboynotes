@@ -51,6 +51,7 @@ private:
     void showError(const QString errorText);
     QTimer *mStatusMessageTimer;
 
+    // Only one UploadJob should run per time
     bool mUploadJobProcessRunning;
 };
 
