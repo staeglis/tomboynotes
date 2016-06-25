@@ -194,6 +194,7 @@ void TomboyNotesResource::configure(WId windowId)
 
     if (dialog.exec() == QDialog::Accepted) {
         dialog.saveSettings();
+        setAgentName(Settings::collectionName());
     }
 
     if (configurationNotValid())
@@ -219,6 +220,7 @@ void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Co
 
     if (mUploadJobProcessRunning) {
         retryAfterFailure("");
+        return;
     }
 
     auto job = new TomboyItemUploadJob(item, JobType::addItem, this);
@@ -239,6 +241,7 @@ void TomboyNotesResource::itemChanged(const Akonadi::Item &item, const QSet<QByt
 
     if (mUploadJobProcessRunning) {
         retryAfterFailure("");
+        return;
     }
 
     auto job = new TomboyItemUploadJob(item, JobType::modifyItem, this);
@@ -258,6 +261,7 @@ void TomboyNotesResource::itemRemoved(const Akonadi::Item &item)
 
     if (mUploadJobProcessRunning) {
         retryAfterFailure("");
+        return;
     }
 
     auto job = new TomboyItemUploadJob(item, JobType::deleteItem, this);

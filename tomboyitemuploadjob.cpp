@@ -38,10 +38,13 @@ void TomboyItemUploadJob::start()
     // Convert note to JSON
     QJsonObject jsonNote;
     jsonNote["guid"] = mSourceItem.remoteId();
-    if (mJobType == JobType::deleteItem) {
+    switch (mJobType) {
+    case JobType::deleteItem:
         jsonNote["command"] = "delete";
-    }
-    else  {
+        break;
+    case JobType::addItem:
+        jsonNote["create-date"] = QDateTime::currentDateTime().toString(Qt::ISODate);
+    case JobType::modifyItem:
         jsonNote["title"] = mNoteContent->headerByType("subject")->asUnicodeString();
         jsonNote["note-content"] = mNoteContent->mainBodyPart()->decodedText();
         jsonNote["note-content-version"] = "1";
