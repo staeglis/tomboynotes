@@ -45,7 +45,7 @@ void TomboyItemUploadJob::start()
         jsonNote["title"] = mNoteContent->headerByType("subject")->asUnicodeString();
         jsonNote["note-content"] = mNoteContent->mainBodyPart()->decodedText();
         jsonNote["note-content-version"] = "1";
-        jsonNote["last-change-date"] = mSourceItem.modificationTime().toString("yyyy-MM-ddThh-mm-ss.0000zzz-HH:00");
+        jsonNote["last-change-date"] = QDateTime::currentDateTime().toString(Qt::ISODate);
     }
 
     // Create the full JSON object
@@ -87,7 +87,9 @@ void TomboyItemUploadJob::onRequestFinished()
     bool found = false;
     foreach (auto note, notes) {
         found = (note.toObject()["guid"].toString() == mSourceItem.remoteId());
-        break;
+        if (found) {
+            break;
+        }
     }
     if (mJobType == JobType::deleteItem && found) {
         setError(TomboyJobError::PermanentError);
@@ -101,6 +103,7 @@ void TomboyItemUploadJob::onRequestFinished()
         emitResult();
         return;
     }
+
     setError(TomboyJobError::NoError);
     emitResult();
 }

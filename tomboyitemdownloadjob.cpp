@@ -51,7 +51,7 @@ void TomboyItemDownloadJob::onRequestFinished()
 
     // Set timestamp
     QString timeStampJson = jsonNote["last-change-date"].toString();
-    QDateTime modificationTime = QDateTime::fromString(timeStampJson, "yyyy-MM-ddThh-mm-ss.0000zzz-HH:00");
+    QDateTime modificationTime = QDateTime::fromString(timeStampJson, Qt::ISODate);
     mResultItem.setModificationTime(modificationTime);
 
     // Set note title
