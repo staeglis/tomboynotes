@@ -5,8 +5,8 @@
 #include "debug.h"
 #include "tomboycollectionsdownloadjob.h"
 
-TomboyCollectionsDownloadJob::TomboyCollectionsDownloadJob(const QString &collectionName, QObject *parent)
-    : TomboyJobBase(parent)
+TomboyCollectionsDownloadJob::TomboyCollectionsDownloadJob(const QString &collectionName, KIO::AccessManager *manager, QObject *parent)
+    : TomboyJobBase(manager, parent)
 {
     mCollectionName = collectionName;
 }

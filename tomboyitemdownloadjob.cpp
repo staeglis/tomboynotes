@@ -5,8 +5,8 @@
 #include "debug.h"
 #include "tomboyitemdownloadjob.h"
 
-TomboyItemDownloadJob::TomboyItemDownloadJob(const Akonadi::Item &item, QObject *parent)
-    : TomboyJobBase(parent)
+TomboyItemDownloadJob::TomboyItemDownloadJob(const Akonadi::Item &item, KIO::AccessManager *manager, QObject *parent)
+    : TomboyJobBase(manager, parent)
 {
     mResultItem = Akonadi::Item(item);
 }

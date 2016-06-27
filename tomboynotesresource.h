@@ -1,8 +1,10 @@
 #ifndef TOMBOYNOTESRESOURCE_H
 #define TOMBOYNOTESRESOURCE_H
 
-#include <AkonadiAgentBase/ResourceBase>
+
 #include <QtNetwork>
+#include <AkonadiAgentBase/ResourceBase>
+#include <KIO/AccessManager>
 #include "o1tomboy.h"
 #include "o1requestor.h"
 
@@ -34,6 +36,7 @@ protected Q_SLOTS:
 private Q_SLOTS:
     // Status handling
     void clearStatusMessage();
+    void onSslError(QNetworkReply *reply, const QList<QSslError> &errors);
 
 protected:
     void aboutToQuit() Q_DECL_OVERRIDE;
@@ -53,6 +56,8 @@ private:
 
     // Only one UploadJob should run per time
     bool mUploadJobProcessRunning;
+
+    KIO::AccessManager *mManager;
 };
 
 #endif

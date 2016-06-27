@@ -5,8 +5,8 @@
 #include "tomboyitemsdownloadjob.h"
 
 
-TomboyItemsDownloadJob::TomboyItemsDownloadJob(const Akonadi::Collection::Id &id, QObject *parent)
-    : TomboyJobBase(parent)
+TomboyItemsDownloadJob::TomboyItemsDownloadJob(const Akonadi::Collection::Id &id, KIO::AccessManager *manager, QObject *parent)
+    : TomboyJobBase(manager, parent)
 {
     mCollectionId = id;
 }

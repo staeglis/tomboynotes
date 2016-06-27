@@ -38,6 +38,10 @@
       <label>Do not change the actual backend data.</label>
       <default>false</default>
     </entry>
+    <entry name="ignoreSslErrors" type="Bool">
+      <label>Ignore SSL errors.</label>
+      <default>false</default>
+    </entry>
     <entry name="refreshInterval" type="Int">
       <label>Refresh every</label>
       <default>5</default>

@@ -1,5 +1,7 @@
 #include <QtDBus/QDBusConnection>
+#include <QSslCipher>
 #include <changerecorder.h>
+#include <ksslinfodialog.h>
 #include <kwindowsystem.h>
 #include <ItemFetchScope>
 #include "debug.h"
@@ -34,6 +36,9 @@ TomboyNotesResource::TomboyNotesResource(const QString &id)
 
     mUploadJobProcessRunning = false;
 
+    mManager = new KIO::AccessManager(this);
+    connect(mManager, &KIO::AccessManager::sslErrors, this, &TomboyNotesResource::onSslError);
+
     qCDebug(log_tomboynotesresource) << "Resource started";
 }
 
@@ -46,7 +51,7 @@ void TomboyNotesResource::retrieveCollections()
 {
     qCDebug(log_tomboynotesresource) << "Retriving collections started";
 
-    auto job = new TomboyCollectionsDownloadJob(Settings::collectionName(), this);
+    auto job = new TomboyCollectionsDownloadJob(Settings::collectionName(), mManager, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     job->setServerURL(Settings::serverURL(), Settings::userURL());
     // connect to its result() signal
@@ -64,7 +69,7 @@ void TomboyNotesResource::retrieveItems(const Akonadi::Collection &collection)
     }
 
     // create the job
-    auto job = new TomboyItemsDownloadJob(collection.id(), this);
+    auto job = new TomboyItemsDownloadJob(collection.id(), mManager, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     job->setServerURL(Settings::serverURL(), Settings::contentURL());
     // connect to its result() signal
@@ -83,7 +88,7 @@ bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QBy
     }
 
     // this method is called when Akonadi wants more data for a given item.
-    auto job = new TomboyItemDownloadJob(item, this);
+    auto job = new TomboyItemDownloadJob(item, mManager, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     job->setServerURL(Settings::serverURL(), Settings::contentURL());
     // connect to its result() signal
@@ -177,6 +182,13 @@ void TomboyNotesResource::clearStatusMessage()
     Q_EMIT status(Akonadi::AgentBase::Idle, QString());
 }
 
+void TomboyNotesResource::onSslError(QNetworkReply *reply, const QList<QSslError> &errors)
+{
+    if (Settings::ignoreSslErrors()) {
+        reply->ignoreSslErrors();
+    }
+}
+
 void TomboyNotesResource::aboutToQuit()
 {
     // TODO: any cleanup you need to do while there is still an active
@@ -194,14 +206,16 @@ void TomboyNotesResource::configure(WId windowId)
     }
 
     // Run the configuration dialog an sve settings if accepted
-    if (dialog.exec() == QDialog::Accepted) {
-        dialog.saveSettings();
-        setAgentName(Settings::collectionName());
+    if (dialog.exec() != QDialog::Accepted) {
+        return;
     }
+
+    dialog.saveSettings();
+    setAgentName(Settings::collectionName());
 
     if (configurationNotValid())
     {
-        auto job = new TomboyServerAuthenticateJob(this);
+        auto job = new TomboyServerAuthenticateJob(mManager, this);
         job->setServerURL(Settings::serverURL(), "");
         connect(job, &KJob::result, this, &TomboyNotesResource::onAuthorizationFinished);
         job->start();
@@ -225,7 +239,7 @@ void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Co
         return;
     }
 
-    auto job = new TomboyItemUploadJob(item, JobType::addItem, this);
+    auto job = new TomboyItemUploadJob(item, JobType::addItem, mManager, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     job->setServerURL(Settings::serverURL(), Settings::contentURL());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
@@ -246,7 +260,7 @@ void TomboyNotesResource::itemChanged(const Akonadi::Item &item, const QSet<QByt
         return;
     }
 
-    auto job = new TomboyItemUploadJob(item, JobType::modifyItem, this);
+    auto job = new TomboyItemUploadJob(item, JobType::modifyItem, mManager, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     job->setServerURL(Settings::serverURL(), Settings::contentURL());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
@@ -266,7 +280,7 @@ void TomboyNotesResource::itemRemoved(const Akonadi::Item &item)
         return;
     }
 
-    auto job = new TomboyItemUploadJob(item, JobType::deleteItem, this);
+    auto job = new TomboyItemUploadJob(item, JobType::deleteItem, mManager, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     job->setServerURL(Settings::serverURL(), Settings::contentURL());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);

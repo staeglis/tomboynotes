@@ -5,8 +5,8 @@
 #include "debug.h"
 #include "tomboyitemuploadjob.h"
 
-TomboyItemUploadJob::TomboyItemUploadJob(const Akonadi::Item &item, JobType jobType, QObject *parent)
-    : TomboyJobBase(parent)
+TomboyItemUploadJob::TomboyItemUploadJob(const Akonadi::Item &item, JobType jobType, KIO::AccessManager *manager, QObject *parent)
+    : TomboyJobBase(manager, parent)
 {
     mSourceItem = Akonadi::Item(item);
     if (item.hasPayload<KMime::Message::Ptr>()) {

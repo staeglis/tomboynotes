@@ -1,12 +1,12 @@
 #include "tomboyjobbase.h"
 
 
-TomboyJobBase::TomboyJobBase(QObject *parent)
+TomboyJobBase::TomboyJobBase(KIO::AccessManager *manager, QObject *parent)
     : KCompositeJob(parent)
 {
     // Create the OAuth objects
     mO1 = new O1Tomboy(this);
-    mManager = new KIO::AccessManager(this);
+    mManager = manager;
     mRequestor = new O1Requestor(mManager, mO1, this);
 }
 
@@ -27,12 +27,10 @@ TomboyJobError TomboyJobBase::checkReplyError()
     switch (mReply->error()) {
     case QNetworkReply::NoError :
         return TomboyJobError::NoError;
-        break;
     case QNetworkReply::RemoteHostClosedError:
     case QNetworkReply::HostNotFoundError:
     case QNetworkReply::TimeoutError:
         return TomboyJobError::TemporaryError;
-        break;
     default:
         return TomboyJobError::PermanentError;
     }

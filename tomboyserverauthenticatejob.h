@@ -9,7 +9,7 @@ class TomboyServerAuthenticateJob : public TomboyJobBase
 {
     Q_OBJECT
 public:
-    TomboyServerAuthenticateJob(QObject *parent = Q_NULLPTR);
+    TomboyServerAuthenticateJob(KIO::AccessManager *manager, QObject *parent = Q_NULLPTR);
 
     QString getRequestToken();
     QString getRequestTokenSecret();

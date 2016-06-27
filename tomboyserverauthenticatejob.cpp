@@ -5,8 +5,8 @@
 #include "debug.h"
 #include "tomboyserverauthenticatejob.h"
 
-TomboyServerAuthenticateJob::TomboyServerAuthenticateJob(QObject *parent)
-    : TomboyJobBase(parent)
+TomboyServerAuthenticateJob::TomboyServerAuthenticateJob(KIO::AccessManager *manager, QObject *parent)
+    : TomboyJobBase(manager, parent)
 {
     // Connect the o2 authenfication signals
     connect(mO1, SIGNAL(linkedChanged()), this, SLOT(onLinkedChanged()));
