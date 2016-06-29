@@ -29,9 +29,9 @@ TomboyServerAuthenticateJob::TomboyServerAuthenticateJob(KIO::AccessManager *man
     : TomboyJobBase(manager, parent)
 {
     // Connect the o2 authenfication signals
-    connect(mO1, SIGNAL(linkingFailed()), this, SLOT(onLinkingFailed()));
-    connect(mO1, SIGNAL(linkingSucceeded()), this, SLOT(onLinkingSucceeded()));
-    connect(mO1, SIGNAL(openBrowser(QUrl)), this, SLOT(onOpenBrowser(QUrl)));
+    connect(mO1, &O1::linkingFailed, this, &TomboyServerAuthenticateJob::onLinkingFailed);
+    connect(mO1, &O1::linkingSucceeded, this, &TomboyServerAuthenticateJob::onLinkingSucceeded);
+    connect(mO1, &O1::openBrowser, this, &TomboyServerAuthenticateJob::onOpenBrowser);
 }
 
 void TomboyServerAuthenticateJob::start()
