@@ -26,21 +26,21 @@
 
 enum class JobType
 {
-    addItem,
-    modifyItem,
-    deleteItem
+    AddItem,
+    ModifyItem,
+    DeleteItem
 };
 
 class TomboyItemUploadJob : public TomboyJobBase
 {
     Q_OBJECT
 public:
-    TomboyItemUploadJob(const Akonadi::Item &item, JobType jobType, KIO::AccessManager *manager, QObject *parent = 0);
+    TomboyItemUploadJob(const Akonadi::Item &item, JobType jobType, KIO::AccessManager *manager, QObject *parent = Q_NULLPTR);
 
     // Returns mSourceItem for post-processing purposes
     Akonadi::Item item() const;
 
-    JobType jobType();
+    JobType jobType() const;
 
     // automatically called by KJob
     void start() Q_DECL_OVERRIDE;
@@ -51,7 +51,7 @@ private Q_SLOTS:
 
 private:
     // Workaround for https://bugreports.qt-project.org/browse/QTBUG-26161 Qt bug
-    QString getCurrentISOTime();
+    QString getCurrentISOTime() const;
 
     Akonadi::Item mSourceItem;
     KMime::Message::Ptr mNoteContent;

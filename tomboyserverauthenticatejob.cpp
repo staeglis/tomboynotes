@@ -21,6 +21,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <klocalizedstring.h>
 #include "debug.h"
 #include "tomboyserverauthenticatejob.h"
 
@@ -28,11 +29,9 @@ TomboyServerAuthenticateJob::TomboyServerAuthenticateJob(KIO::AccessManager *man
     : TomboyJobBase(manager, parent)
 {
     // Connect the o2 authenfication signals
-    connect(mO1, SIGNAL(linkedChanged()), this, SLOT(onLinkedChanged()));
     connect(mO1, SIGNAL(linkingFailed()), this, SLOT(onLinkingFailed()));
     connect(mO1, SIGNAL(linkingSucceeded()), this, SLOT(onLinkingSucceeded()));
     connect(mO1, SIGNAL(openBrowser(QUrl)), this, SLOT(onOpenBrowser(QUrl)));
-    connect(mO1, SIGNAL(closeBrowser()), this, SLOT(onCloseBrowser()));
 }
 
 void TomboyServerAuthenticateJob::start()
@@ -40,22 +39,22 @@ void TomboyServerAuthenticateJob::start()
     mO1->link();
 }
 
-QString TomboyServerAuthenticateJob::getRequestToken()
+QString TomboyServerAuthenticateJob::getRequestToken() const
 {
     return mO1->getRequestToken();
 }
 
-QString TomboyServerAuthenticateJob::getRequestTokenSecret()
+QString TomboyServerAuthenticateJob::getRequestTokenSecret() const
 {
     return mO1->getRequestTokenSecret();
 }
 
-QString TomboyServerAuthenticateJob::getContentUrl()
+QString TomboyServerAuthenticateJob::getContentUrl() const
 {
     return mContentURL;
 }
 
-QString TomboyServerAuthenticateJob::getUserURL()
+QString TomboyServerAuthenticateJob::getUserURL() const
 {
     return mUserURL;
 }
@@ -63,7 +62,7 @@ QString TomboyServerAuthenticateJob::getUserURL()
 void TomboyServerAuthenticateJob::onLinkingFailed()
 {
     setError(TomboyJobError::PermanentError);
-    setErrorText("Authorization has been failed!");
+    setErrorText(i18n("Authorization has been failed!"));
     emitResult();
 }
 
@@ -76,35 +75,24 @@ void TomboyServerAuthenticateJob::onLinkingSucceeded()
     qCDebug(log_tomboynotesresource) << "TomboyServerAuthenticateJob: Start network request";
 }
 
-void TomboyServerAuthenticateJob::onLinkedChanged()
-{
-
-}
-
 void TomboyServerAuthenticateJob::onOpenBrowser(const QUrl &url)
 {
     QDesktopServices::openUrl(url);
 }
 
-void TomboyServerAuthenticateJob::onCloseBrowser()
-{
-
-}
-
 void TomboyServerAuthenticateJob::onApiRequestFinished()
 {
     checkReplyError();
-    if (error() != TomboyJobError::NoError)
-    {
+    if (error() != TomboyJobError::NoError) {
         setErrorText(mReply->errorString());
         emitResult();
         return;
     }
 
     // Parse received data as JSON and get user-href
-    QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
-    QJsonObject jo = document.object();
-    mUserURL = jo["user-ref"].toObject()["api-ref"].toString();
+    const QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
+    const QJsonObject jo = document.object();
+    mUserURL = jo[QLatin1String("user-ref")].toObject()[QLatin1String("api-ref")].toString();
 
     QNetworkRequest request(mUserURL);
     mReply = mRequestor->get(request, QList<O0RequestParameter>());
@@ -126,7 +114,7 @@ void TomboyServerAuthenticateJob::onUserRequestFinished()
     // Parse received data as JSON and get contentURL
     QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
     QJsonObject jo = document.object();
-    mContentURL = jo["notes-ref"].toObject()["api-ref"].toString();
+    mContentURL = jo[QLatin1String("notes-ref")].toObject()[QLatin1String("api-ref")].toString();
 
     setError(TomboyJobError::NoError);
     emitResult();

@@ -20,25 +20,26 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <krandom.h>
+#include <QUuid>
+#include <klocalizedstring.h>
 #include "debug.h"
 #include "tomboyitemuploadjob.h"
 
 TomboyItemUploadJob::TomboyItemUploadJob(const Akonadi::Item &item, JobType jobType, KIO::AccessManager *manager, QObject *parent)
-    : TomboyJobBase(manager, parent)
+    : TomboyJobBase(manager, parent),
+      mSourceItem(Akonadi::Item(item)),
+      mJobType(jobType)
 {
     mSourceItem = Akonadi::Item(item);
     if (item.hasPayload<KMime::Message::Ptr>()) {
         mNoteContent = item.payload<KMime::Message::Ptr>();
     }
 
-    mJobType = jobType;
-
     mRemoteRevision = item.parentCollection().remoteRevision().toInt();
 
     // Create random remote id if adding new item
-    if (jobType == JobType::addItem) {
-        mSourceItem.setRemoteId(KRandom::randomString(37));
+    if (jobType == JobType::AddItem) {
+        mSourceItem.setRemoteId(QUuid::createUuid().toString());
     }
 }
 
@@ -47,7 +48,7 @@ Akonadi::Item TomboyItemUploadJob::item() const
     return mSourceItem;
 }
 
-JobType TomboyItemUploadJob::jobType()
+JobType TomboyItemUploadJob::jobType() const
 {
     return mJobType;
 }
@@ -58,24 +59,25 @@ void TomboyItemUploadJob::start()
     QJsonObject jsonNote;
     jsonNote["guid"] = mSourceItem.remoteId();
     switch (mJobType) {
-    case JobType::deleteItem:
-        jsonNote["command"] = "delete";
+    case JobType::DeleteItem:
+        jsonNote[QLatin1String("command")] = QStringLiteral("delete");
         break;
-    case JobType::addItem:
+    case JobType::AddItem:
         jsonNote["create-date"] = getCurrentISOTime();
-    case JobType::modifyItem:
-        jsonNote["title"] = mNoteContent->headerByType("subject")->asUnicodeString();
-        jsonNote["note-content"] = mNoteContent->mainBodyPart()->decodedText();
-        jsonNote["note-content-version"] = "1";
-        jsonNote["last-change-date"] = getCurrentISOTime();
+        // Missing break is intended
+    case JobType::ModifyItem:
+        jsonNote[QLatin1String("title")] = mNoteContent->headerByType("subject")->asUnicodeString();
+        jsonNote[QLatin1String("note-content")] = mNoteContent->mainBodyPart()->decodedText();
+        jsonNote[QLatin1String("note-content-version")] = QStringLiteral("1");
+        jsonNote[QLatin1String("last-change-date")] = getCurrentISOTime();
     }
 
     // Create the full JSON object
     QJsonArray noteChanges;
     noteChanges.append(jsonNote);
     QJsonObject postJson;
-    postJson["note-changes"] = noteChanges;
-    postJson["latest-sync-revision"] = QString::number(++mRemoteRevision);
+    postJson[QLatin1String("note-changes")] = noteChanges;
+    postJson[QLatin1String("latest-sync-revision")] = QString::number(++mRemoteRevision);
     QJsonDocument postData;
     postData.setObject(postJson);
 
@@ -91,8 +93,7 @@ void TomboyItemUploadJob::start()
 void TomboyItemUploadJob::onRequestFinished()
 {
     checkReplyError();
-    if (error() != TomboyJobError::NoError)
-    {
+    if (error() != TomboyJobError::NoError) {
         setErrorText(mReply->errorString());
         emitResult();
         return;
@@ -100,28 +101,28 @@ void TomboyItemUploadJob::onRequestFinished()
     qCDebug(log_tomboynotesresource) << "TomboyItemUploadJob: Network request finished. No error occured";
 
     // Parse received data as JSON
-    QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
+    const QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
 
-    QJsonObject jo = document.object();
-    QJsonArray notes = jo["notes"].toArray();
+    const QJsonObject jo = document.object();
+    const QJsonArray notes = jo[QLatin1String("notes")].toArray();
 
     // Check if server status is as expected
     bool found = false;
-    foreach (auto note, notes) {
-        found = (note.toObject()["guid"].toString() == mSourceItem.remoteId());
+    Q_FOREACH (const auto note, notes) {
+        found = (note.toObject()[QLatin1String("guid")].toString() == mSourceItem.remoteId());
         if (found) {
             break;
         }
     }
-    if (mJobType == JobType::deleteItem && found) {
+    if (mJobType == JobType::DeleteItem && found) {
         setError(TomboyJobError::PermanentError);
-        setErrorText("Sync error. Server status not as expected!");
+        setErrorText(i18n("Sync error. Server status not as expected!"));
         emitResult();
         return;
     }
-    if (mJobType != JobType::deleteItem && !found) {
+    if (mJobType != JobType::DeleteItem && !found) {
         setError(TomboyJobError::PermanentError);
-        setErrorText("Sync error. Server status not as expected!");
+        setErrorText(i18n("Sync error. Server status not as expected!"));
         emitResult();
         return;
     }
@@ -130,7 +131,7 @@ void TomboyItemUploadJob::onRequestFinished()
     emitResult();
 }
 
-QString TomboyItemUploadJob::getCurrentISOTime()
+QString TomboyItemUploadJob::getCurrentISOTime() const
 {
     QDateTime local = QDateTime::currentDateTime();
     QDateTime utc = local.toUTC();

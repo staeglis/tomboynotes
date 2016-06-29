@@ -28,7 +28,7 @@
 #include "o1requestor.h"
 
 class TomboyNotesResource : public Akonadi::ResourceBase,
-                           public Akonadi::AgentBase::Observer
+                            public Akonadi::AgentBase::Observer
 {
     Q_OBJECT
 
@@ -70,7 +70,7 @@ private:
 
     void retryAfterFailure(const QString &errorMessage);
     // Status handling
-    void showError(const QString errorText);
+    void showError(const QString &errorText);
     QTimer *mStatusMessageTimer;
 
     // Only one UploadJob should run per time

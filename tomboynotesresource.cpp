@@ -20,6 +20,7 @@
 #include <QtDBus/QDBusConnection>
 #include <QSslCipher>
 #include <changerecorder.h>
+#include <klocalizedstring.h>
 #include <ksslinfodialog.h>
 #include <kwindowsystem.h>
 #include <ItemFetchScope>
@@ -63,12 +64,16 @@ TomboyNotesResource::TomboyNotesResource(const QString &id)
 
 TomboyNotesResource::~TomboyNotesResource()
 {
-    delete mStatusMessageTimer;
 }
 
 void TomboyNotesResource::retrieveCollections()
 {
     qCDebug(log_tomboynotesresource) << "Retriving collections started";
+
+    if (configurationNotValid()) {
+        cancelTask(i18n("Resource configuration is not valid"));
+        return;
+    }
 
     auto job = new TomboyCollectionsDownloadJob(Settings::collectionName(), mManager, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
@@ -83,7 +88,7 @@ void TomboyNotesResource::retrieveCollections()
 void TomboyNotesResource::retrieveItems(const Akonadi::Collection &collection)
 {
     if (configurationNotValid()) {
-        cancelTask("Resource configuration is not valid");
+        cancelTask(i18n("Resource configuration is not valid"));
         return;
     }
 
@@ -102,7 +107,7 @@ bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QBy
     Q_UNUSED( parts );
 
     if (configurationNotValid()) {
-        cancelTask("Resource configuration is not valid");
+        cancelTask(i18n("Resource configuration is not valid"));
         return false;
     }
 
@@ -132,7 +137,8 @@ void TomboyNotesResource::onAuthorizationFinished(KJob *kjob)
         synchronizeCollectionTree();
         synchronize();
     }
-    else {
+    else
+    {
         showError(job->errorText());
     }
 }
@@ -224,7 +230,7 @@ void TomboyNotesResource::configure(WId windowId)
         KWindowSystem::setMainWindow(&dialog, windowId);
     }
 
-    // Run the configuration dialog an sve settings if accepted
+    // Run the configuration dialog an save settings if accepted
     if (dialog.exec() != QDialog::Accepted) {
         return;
     }
@@ -232,15 +238,15 @@ void TomboyNotesResource::configure(WId windowId)
     dialog.saveSettings();
     setAgentName(Settings::collectionName());
 
-    if (configurationNotValid())
-    {
+    if (configurationNotValid()) {
         auto job = new TomboyServerAuthenticateJob(mManager, this);
-        job->setServerURL(Settings::serverURL(), "");
+        job->setServerURL(Settings::serverURL(), QString::null);
         connect(job, &KJob::result, this, &TomboyNotesResource::onAuthorizationFinished);
         job->start();
         qCDebug(log_tomboynotesresource) << "Authorization job started";
     }
-    else {
+    else
+    {
         synchronize();
     }
 }
@@ -249,16 +255,16 @@ void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Co
 {
     Q_UNUSED( collection );
     if (Settings::readOnly() || configurationNotValid()) {
-        cancelTask("Resource is read-only");
+        cancelTask(i18n("Resource is read-only"));
         return;
     }
 
     if (mUploadJobProcessRunning) {
-        retryAfterFailure("");
+        retryAfterFailure(QString::null);
         return;
     }
 
-    auto job = new TomboyItemUploadJob(item, JobType::addItem, mManager, this);
+    auto job = new TomboyItemUploadJob(item, JobType::AddItem, mManager, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     job->setServerURL(Settings::serverURL(), Settings::contentURL());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
@@ -270,16 +276,16 @@ void TomboyNotesResource::itemChanged(const Akonadi::Item &item, const QSet<QByt
 {
     Q_UNUSED( parts );
     if (Settings::readOnly() || configurationNotValid()) {
-        cancelTask("Resource is read-only");
+        cancelTask(i18n("Resource is read-only"));
         return;
     }
 
     if (mUploadJobProcessRunning) {
-        retryAfterFailure("");
+        retryAfterFailure(QString::null);
         return;
     }
 
-    auto job = new TomboyItemUploadJob(item, JobType::modifyItem, mManager, this);
+    auto job = new TomboyItemUploadJob(item, JobType::ModifyItem, mManager, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     job->setServerURL(Settings::serverURL(), Settings::contentURL());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
@@ -290,16 +296,16 @@ void TomboyNotesResource::itemChanged(const Akonadi::Item &item, const QSet<QByt
 void TomboyNotesResource::itemRemoved(const Akonadi::Item &item)
 {
     if (Settings::readOnly() || configurationNotValid()) {
-        cancelTask("Resource is read-only");
+        cancelTask(i18n("Resource is read-only"));
         return;
     }
 
     if (mUploadJobProcessRunning) {
-        retryAfterFailure("");
+        retryAfterFailure(QString::null);
         return;
     }
 
-    auto job = new TomboyItemUploadJob(item, JobType::deleteItem, mManager, this);
+    auto job = new TomboyItemUploadJob(item, JobType::DeleteItem, mManager, this);
     job->setAuthentication(Settings::requestToken(), Settings::requestTokenSecret());
     job->setServerURL(Settings::serverURL(), Settings::contentURL());
     connect(job, &KJob::result, this, &TomboyNotesResource::onItemChangeCommitted);
@@ -319,7 +325,7 @@ void TomboyNotesResource::retryAfterFailure(const QString &errorMessage)
     setTemporaryOffline(Settings::self()->refreshInterval() <= 0 ? 300 : Settings::self()->refreshInterval() * 60);
 }
 
-void TomboyNotesResource::showError(const QString errorText)
+void TomboyNotesResource::showError(const QString &errorText)
 {
     Q_EMIT status(Akonadi::AgentBase::Idle, errorText);
     mStatusMessageTimer->start(1000 * 10);

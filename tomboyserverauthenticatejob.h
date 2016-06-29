@@ -30,19 +30,17 @@ class TomboyServerAuthenticateJob : public TomboyJobBase
 public:
     TomboyServerAuthenticateJob(KIO::AccessManager *manager, QObject *parent = Q_NULLPTR);
 
-    QString getRequestToken();
-    QString getRequestTokenSecret();
-    QString getContentUrl();
-    QString getUserURL();
+    QString getRequestToken() const;
+    QString getRequestTokenSecret() const;
+    QString getContentUrl() const;
+    QString getUserURL() const;
 
     void start() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void onLinkingFailed();
     void onLinkingSucceeded();
-    void onLinkedChanged();
     void onOpenBrowser(const QUrl &url);
-    void onCloseBrowser();
 
     void onApiRequestFinished();
     void onUserRequestFinished();

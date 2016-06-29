@@ -51,7 +51,7 @@ protected:
     QString mApiURL;
     QString mContentURL;
 
-    TomboyJobError checkReplyError();
+    void checkReplyError();
 };
 
 #endif // TOMBOYJOBBASE_H
