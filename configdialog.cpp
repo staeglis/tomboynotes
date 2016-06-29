@@ -1,3 +1,22 @@
+/*
+    Copyright (c) 2016 Stefan Stäglich
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+
 #include <kconfigdialogmanager.h>
 #include "configdialog.h"
 #include "settings.h"
@@ -5,7 +24,9 @@
 
 ConfigDialog::ConfigDialog(Settings* settings, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ConfigDialog)
+    ui(new Ui::ConfigDialog),
+    mManager(new KConfigDialogManager(this, settings)),
+    mSettings(settings)
 {
     // Create window
     setWindowTitle(i18n("Select a tomboy server"));
@@ -16,8 +37,6 @@ ConfigDialog::ConfigDialog(Settings* settings, QWidget *parent) :
     ui->setupUi(mainWidget);
 
     // KSettings stuff
-    mSettings = settings;
-    mManager = new KConfigDialogManager(this, settings);
     mManager->updateWidgets();
 
     // Set the button actions
@@ -47,11 +66,11 @@ ConfigDialog::~ConfigDialog()
 void ConfigDialog::saveSettings()
 {
     if ( ui->kcfg_ServerURL->text() != mSettings->serverURL() ) {
-        mSettings->setRequestToken("");
-        mSettings->setRequestTokenSecret("");
+        mSettings->setRequestToken(QString::null);
+        mSettings->setRequestTokenSecret(QString::null);
     }
 
-    if(ui->kcfg_collectionName->text() == "") {
+    if(ui->kcfg_collectionName->text().isEmpty()) {
         ui->kcfg_collectionName->setText("Tomboy Notes " + Settings::serverURL());
     }
 

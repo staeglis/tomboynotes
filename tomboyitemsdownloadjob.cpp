@@ -1,14 +1,34 @@
+/*
+    Copyright (c) 2016 Stefan Stäglich
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <Akonadi/Notes/NoteUtils>
 #include "debug.h"
 #include "tomboyitemsdownloadjob.h"
 
 
 TomboyItemsDownloadJob::TomboyItemsDownloadJob(const Akonadi::Collection::Id &id, KIO::AccessManager *manager, QObject *parent)
-    : TomboyJobBase(manager, parent)
+    : TomboyJobBase(manager, parent),
+      mCollectionId(id)
 {
-    mCollectionId = id;
 }
 
 Akonadi::Item::List TomboyItemsDownloadJob::items() const
@@ -30,22 +50,21 @@ void TomboyItemsDownloadJob::onRequestFinished()
 {
     qCDebug(log_tomboynotesresource) << "TomboyItemsDownloadJob: Network request finished";
     checkReplyError();
-    if (error() != TomboyJobError::NoError)
-    {
+    if (error() != TomboyJobError::NoError) {
         setErrorText(mReply->errorString());
         emitResult();
         return;
     }
 
     // Parse received data as JSON
-    QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
+    const QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
 
-    QJsonObject jo = document.object();
-    QJsonArray notes = jo["notes"].toArray();
+    const QJsonObject jo = document.object();
+    const QJsonArray notes = jo[QLatin1String("notes")].toArray();
 
-    foreach (auto note, notes) {
-        Akonadi::Item item( "text/x-vnd.akonadi.note" );
-        item.setRemoteId(note.toObject()["guid"].toString());
+    Q_FOREACH (const auto &note, notes) {
+        Akonadi::Item item(Akonadi::NoteUtils::noteMimeType());
+        item.setRemoteId(note.toObject()[QLatin1String("guid")].toString());
         mResultItems << item;
         qCDebug(log_tomboynotesresource) << "TomboyItemsDownloadJob: Retriving note with id" << item.remoteId();
     }

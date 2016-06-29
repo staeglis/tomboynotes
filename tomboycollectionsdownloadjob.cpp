@@ -1,17 +1,37 @@
+/*
+    Copyright (c) 2016 Stefan Stäglich
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+
 #include <QDesktopServices>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <Akonadi/Notes/NoteUtils>
 #include "debug.h"
 #include "tomboycollectionsdownloadjob.h"
 
 TomboyCollectionsDownloadJob::TomboyCollectionsDownloadJob(const QString &collectionName, KIO::AccessManager *manager, QObject *parent)
-    : TomboyJobBase(manager, parent)
+    : TomboyJobBase(manager, parent),
+      mCollectionName(collectionName)
 {
-    mCollectionName = collectionName;
 }
 
-Akonadi::Collection::List TomboyCollectionsDownloadJob::collections()
+Akonadi::Collection::List TomboyCollectionsDownloadJob::collections() const
 {
     return mResultCollections;
 }
@@ -38,23 +58,21 @@ void TomboyCollectionsDownloadJob::onRequestFinished()
     }
 
     // Parse received data as JSON
-    QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
+    const QJsonDocument document = QJsonDocument::fromJson(mReply->readAll(), Q_NULLPTR);
 
-    QJsonObject jo = document.object();
+    const QJsonObject jo = document.object();
     qCDebug(log_tomboynotesresource) << "TomboyCollectionsDownloadJob: " << jo;
-    QJsonValue collectionRevision = jo["latest-sync-revision"];
+    const QJsonValue collectionRevision = jo[QLatin1String("latest-sync-revision")];
     qCDebug(log_tomboynotesresource) << "TomboyCollectionsDownloadJob: " << collectionRevision;
 
     Akonadi::Collection c;
     c.setParentCollection( Akonadi::Collection::root());
-    c.setRemoteId( mContentURL );
-    c.setName( mCollectionName );
+    c.setRemoteId(mContentURL);
+    c.setName(mCollectionName);
     c.setRemoteRevision(QString::number(collectionRevision.toInt()));
     qCDebug(log_tomboynotesresource) << "TomboyCollectionsDownloadJob: Sync revision " << collectionRevision.toString();
 
-    QStringList mimeTypes;
-    mimeTypes << QLatin1String("text/x-vnd.akonadi.note");
-    c.setContentMimeTypes( mimeTypes );
+    c.setContentMimeTypes({ Akonadi::NoteUtils::noteMimeType() });
 
     mResultCollections << c;
 
