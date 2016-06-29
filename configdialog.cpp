@@ -25,7 +25,6 @@
 ConfigDialog::ConfigDialog(Settings* settings, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ConfigDialog),
-    mManager(new KConfigDialogManager(this, settings)),
     mSettings(settings)
 {
     // Create window
@@ -36,7 +35,8 @@ ConfigDialog::ConfigDialog(Settings* settings, QWidget *parent) :
     mainLayout->addWidget(mainWidget);
     ui->setupUi(mainWidget);
 
-    // KSettings stuff
+    // KSettings stuff. Works not in the initialization list!
+    mManager = new KConfigDialogManager(this, settings);
     mManager->updateWidgets();
 
     // Set the button actions
