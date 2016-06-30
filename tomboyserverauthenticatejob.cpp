@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-#include <QDesktopServices>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -26,12 +25,19 @@
 #include "tomboyserverauthenticatejob.h"
 
 TomboyServerAuthenticateJob::TomboyServerAuthenticateJob(KIO::AccessManager *manager, QObject *parent)
-    : TomboyJobBase(manager, parent)
+    : TomboyJobBase(manager, parent),
+      mWebView(new QWebEngineView(Q_NULLPTR))
 {
     // Connect the o2 authenfication signals
     connect(mO1, &O1::linkingFailed, this, &TomboyServerAuthenticateJob::onLinkingFailed);
     connect(mO1, &O1::linkingSucceeded, this, &TomboyServerAuthenticateJob::onLinkingSucceeded);
     connect(mO1, &O1::openBrowser, this, &TomboyServerAuthenticateJob::onOpenBrowser);
+    connect(mO1, &O1::closeBrowser, mWebView, &QWebEngineView::close);
+}
+
+TomboyServerAuthenticateJob::~TomboyServerAuthenticateJob()
+{
+    delete mWebView;
 }
 
 void TomboyServerAuthenticateJob::start()
@@ -77,7 +83,8 @@ void TomboyServerAuthenticateJob::onLinkingSucceeded()
 
 void TomboyServerAuthenticateJob::onOpenBrowser(const QUrl &url)
 {
-    QDesktopServices::openUrl(url);
+    mWebView->setUrl(url);
+    mWebView->show();
 }
 
 void TomboyServerAuthenticateJob::onApiRequestFinished()

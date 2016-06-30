@@ -21,6 +21,7 @@
 #define TOMBOYSERVERAUTHENTICATEJOB_H
 
 #include <QString>
+#include <QWebEngineView>
 #include "tomboyjobbase.h"
 
 
@@ -29,6 +30,8 @@ class TomboyServerAuthenticateJob : public TomboyJobBase
     Q_OBJECT
 public:
     TomboyServerAuthenticateJob(KIO::AccessManager *manager, QObject *parent = Q_NULLPTR);
+
+    ~TomboyServerAuthenticateJob();
 
     QString getRequestToken() const;
     QString getRequestTokenSecret() const;
@@ -47,6 +50,8 @@ private Q_SLOTS:
 
 private:
     QString mUserURL;
+
+    QWebEngineView *mWebView;
 
 };
 

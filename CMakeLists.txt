@@ -20,6 +20,7 @@ set(AKONADI_VERSION "5.0")
 set(QT_REQUIRED_VERSION "5.3.0")
 
 find_package(Qt5 ${QT_REQUIRED_VERSION} REQUIRED Core Network Gui)
+find_package(Qt5WebEngineWidgets REQUIRED)
 
 find_package(KF5Akonadi ${AKONADI_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiNotes ${AKONADI_MIN_VERSION} CONFIG REQUIRED)
@@ -101,6 +102,7 @@ target_link_libraries(akonadi_tomboynotes_resource
     Qt5::DBus
     Qt5::Gui
     Qt5::Network
+    Qt5::WebEngineWidgets
     KF5::AkonadiAgentBase
     KF5::AkonadiNotes
     KF5::ConfigCore

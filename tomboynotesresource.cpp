@@ -235,7 +235,7 @@ void TomboyNotesResource::configure(WId windowId)
 
     if (configurationNotValid()) {
         auto job = new TomboyServerAuthenticateJob(mManager, this);
-        job->setServerURL(Settings::serverURL(), QString::null);
+        job->setServerURL(Settings::serverURL(), QString());
         connect(job, &KJob::result, this, &TomboyNotesResource::onAuthorizationFinished);
         job->start();
         qCDebug(log_tomboynotesresource) << "Authorization job started";
@@ -255,7 +255,7 @@ void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Co
     }
 
     if (mUploadJobProcessRunning) {
-        retryAfterFailure(QString::null);
+        retryAfterFailure(QString());
         return;
     }
 
@@ -276,7 +276,7 @@ void TomboyNotesResource::itemChanged(const Akonadi::Item &item, const QSet<QByt
     }
 
     if (mUploadJobProcessRunning) {
-        retryAfterFailure(QString::null);
+        retryAfterFailure(QString());
         return;
     }
 
@@ -296,7 +296,7 @@ void TomboyNotesResource::itemRemoved(const Akonadi::Item &item)
     }
 
     if (mUploadJobProcessRunning) {
-        retryAfterFailure(QString::null);
+        retryAfterFailure(QString());
         return;
     }
 

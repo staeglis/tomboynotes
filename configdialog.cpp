@@ -66,8 +66,8 @@ ConfigDialog::~ConfigDialog()
 void ConfigDialog::saveSettings()
 {
     if ( ui->kcfg_ServerURL->text() != mSettings->serverURL() ) {
-        mSettings->setRequestToken(QString::null);
-        mSettings->setRequestTokenSecret(QString::null);
+        mSettings->setRequestToken(QString());
+        mSettings->setRequestTokenSecret(QString());
     }
 
     if(ui->kcfg_collectionName->text().isEmpty()) {
