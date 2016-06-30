@@ -53,8 +53,7 @@ protected Q_SLOTS:
     void onItemsRetrieved(KJob *kjob);
 
 private Q_SLOTS:
-    // Status handling
-    void clearStatusMessage();
+    // SSL error handling
     void onSslError(QNetworkReply *reply, const QList<QSslError> &errors);
 
 protected:

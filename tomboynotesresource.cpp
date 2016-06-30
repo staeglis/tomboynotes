@@ -51,7 +51,7 @@ TomboyNotesResource::TomboyNotesResource(const QString &id)
     // Status message stuff
     mStatusMessageTimer = new QTimer(this);
     mStatusMessageTimer->setSingleShot(true);
-    connect(mStatusMessageTimer, &QTimer::timeout, this, &TomboyNotesResource::clearStatusMessage);
+    connect(mStatusMessageTimer, &QTimer::timeout, [=]() { Q_EMIT status(Akonadi::AgentBase::Idle, QString()); });
     connect(this, &AgentBase::error, this, &TomboyNotesResource::showError);
 
     mUploadJobProcessRunning = false;
@@ -200,11 +200,6 @@ void TomboyNotesResource::onItemsRetrieved(KJob *kjob)
 
     itemsRetrieved(job->items());
     qCDebug(log_tomboynotesresource) << "Retriving items job finished";
-}
-
-void TomboyNotesResource::clearStatusMessage()
-{
-    Q_EMIT status(Akonadi::AgentBase::Idle, QString());
 }
 
 void TomboyNotesResource::onSslError(QNetworkReply *reply, const QList<QSslError> &errors)
