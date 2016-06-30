@@ -26,7 +26,7 @@
 
 TomboyItemDownloadJob::TomboyItemDownloadJob(const Akonadi::Item &item, KIO::AccessManager *manager, QObject *parent)
     : TomboyJobBase(manager, parent),
-      mResultItem(Akonadi::Item(item))
+      mResultItem(item)
 {
 }
 

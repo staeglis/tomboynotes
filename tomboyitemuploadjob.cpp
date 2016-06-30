@@ -27,7 +27,7 @@
 
 TomboyItemUploadJob::TomboyItemUploadJob(const Akonadi::Item &item, JobType jobType, KIO::AccessManager *manager, QObject *parent)
     : TomboyJobBase(manager, parent),
-      mSourceItem(Akonadi::Item(item)),
+      mSourceItem(item),
       mJobType(jobType)
 {
     mSourceItem = Akonadi::Item(item);
