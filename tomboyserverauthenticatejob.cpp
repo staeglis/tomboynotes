@@ -17,12 +17,12 @@
     02110-1301, USA.
 */
 
+#include "tomboyserverauthenticatejob.h"
+#include "debug.h"
+#include <klocalizedstring.h>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <klocalizedstring.h>
-#include "debug.h"
-#include "tomboyserverauthenticatejob.h"
 
 TomboyServerAuthenticateJob::TomboyServerAuthenticateJob(KIO::AccessManager *manager, QObject *parent)
     : TomboyJobBase(manager, parent),
@@ -68,7 +68,7 @@ QString TomboyServerAuthenticateJob::getUserURL() const
 void TomboyServerAuthenticateJob::onLinkingFailed()
 {
     setError(TomboyJobError::PermanentError);
-    setErrorText(i18n("Authorization has been failed! It could be an SSL error!"));
+    setErrorText(i18n("Authorization has failed! It could be an SSL error!"));
     emitResult();
 }
 

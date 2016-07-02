@@ -17,13 +17,12 @@
     02110-1301, USA.
 */
 
-#include <QDesktopServices>
+#include "tomboycollectionsdownloadjob.h"
+#include "debug.h"
+#include <Akonadi/Notes/NoteUtils>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
-#include <Akonadi/Notes/NoteUtils>
-#include "debug.h"
-#include "tomboycollectionsdownloadjob.h"
 
 TomboyCollectionsDownloadJob::TomboyCollectionsDownloadJob(const QString &collectionName, KIO::AccessManager *manager, QObject *parent)
     : TomboyJobBase(manager, parent),

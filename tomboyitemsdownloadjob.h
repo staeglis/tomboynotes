@@ -20,8 +20,8 @@
 #ifndef TOMBOYITEMSDOWNLOADJOB_H
 #define TOMBOYITEMSDOWNLOADJOB_H
 
-#include <AkonadiAgentBase/ResourceBase>
 #include "tomboyjobbase.h"
+#include <AkonadiCore/Item>
 
 class TomboyItemsDownloadJob : public TomboyJobBase
 {

@@ -20,10 +20,9 @@
 #ifndef TOMBOYSERVERAUTHENTICATEJOB_H
 #define TOMBOYSERVERAUTHENTICATEJOB_H
 
+#include "tomboyjobbase.h"
 #include <QString>
 #include <QWebEngineView>
-#include "tomboyjobbase.h"
-
 
 class TomboyServerAuthenticateJob : public TomboyJobBase
 {

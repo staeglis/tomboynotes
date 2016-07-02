@@ -20,12 +20,10 @@
 #ifndef TOMBOYNOTESRESOURCE_H
 #define TOMBOYNOTESRESOURCE_H
 
-
-#include <QtNetwork>
-#include <AkonadiAgentBase/ResourceBase>
-#include <KIO/AccessManager>
 #include "o1tomboy.h"
 #include "o1requestor.h"
+#include <AkonadiAgentBase/ResourceBase>
+#include <KIO/AccessManager>
 
 class TomboyNotesResource : public Akonadi::ResourceBase,
                             public Akonadi::AgentBase::Observer
@@ -65,7 +63,7 @@ protected:
     void itemRemoved(const Akonadi::Item &item) Q_DECL_OVERRIDE;
 
 private:
-    bool configurationNotValid();
+    bool configurationNotValid() const;
 
     void retryAfterFailure(const QString &errorMessage);
     // Status handling

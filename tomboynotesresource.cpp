@@ -17,13 +17,7 @@
     02110-1301, USA.
 */
 
-#include <QtDBus/QDBusConnection>
-#include <QSslCipher>
-#include <changerecorder.h>
-#include <klocalizedstring.h>
-#include <ksslinfodialog.h>
-#include <kwindowsystem.h>
-#include <ItemFetchScope>
+#include "tomboynotesresource.h"
 #include "debug.h"
 #include "configdialog.h"
 #include "settings.h"
@@ -33,7 +27,13 @@
 #include "tomboyitemdownloadjob.h"
 #include "tomboyitemsdownloadjob.h"
 #include "tomboyitemuploadjob.h"
-#include "tomboynotesresource.h"
+#include <changerecorder.h>
+#include <ItemFetchScope>
+#include <klocalizedstring.h>
+#include <ksslinfodialog.h>
+#include <kwindowsystem.h>
+#include <QSslCipher>
+#include <QtDBus/QDBusConnection>
 
 using namespace Akonadi;
 
@@ -68,7 +68,7 @@ TomboyNotesResource::~TomboyNotesResource()
 
 void TomboyNotesResource::retrieveCollections()
 {
-    qCDebug(log_tomboynotesresource) << "Retriving collections started";
+    qCDebug(log_tomboynotesresource) << "Retrieving collections started";
 
     if (configurationNotValid()) {
         cancelTask(i18n("Resource configuration is not valid"));
@@ -308,7 +308,7 @@ void TomboyNotesResource::itemRemoved(const Akonadi::Item &item)
     job->start();
 }
 
-bool TomboyNotesResource::configurationNotValid()
+bool TomboyNotesResource::configurationNotValid() const
 {
     return Settings::requestToken().isEmpty() || Settings::requestToken().isEmpty() || Settings::contentURL().isEmpty();
 }

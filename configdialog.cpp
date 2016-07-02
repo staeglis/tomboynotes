@@ -17,10 +17,11 @@
     02110-1301, USA.
 */
 
-#include <kconfigdialogmanager.h>
 #include "configdialog.h"
-#include "settings.h"
 #include "ui_configdialog.h"
+#include "settings.h"
+#include <kconfigdialogmanager.h>
+#include <klocalizedstring.h>
 
 ConfigDialog::ConfigDialog(Settings* settings, QWidget *parent) :
     QDialog(parent),
@@ -28,7 +29,7 @@ ConfigDialog::ConfigDialog(Settings* settings, QWidget *parent) :
     mSettings(settings)
 {
     // Create window
-    setWindowTitle(i18n("Select a tomboy server"));
+    setWindowTitle(i18n("Select a Tomboy server"));
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -71,7 +72,7 @@ void ConfigDialog::saveSettings()
     }
 
     if(ui->kcfg_collectionName->text().isEmpty()) {
-        ui->kcfg_collectionName->setText("Tomboy Notes " + Settings::serverURL());
+        ui->kcfg_collectionName->setText(i18n("Tomboy Notes ") + Settings::serverURL());
     }
 
     mManager->updateSettings();

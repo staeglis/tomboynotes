@@ -20,9 +20,9 @@
 #ifndef TOMBOYITEMUPLOADJOB_H
 #define TOMBOYITEMUPLOADJOB_H
 
-#include <AkonadiAgentBase/ResourceBase>
-#include <KMime/Message>
 #include "tomboyjobbase.h"
+#include <AkonadiCore/Item>
+#include <KMime/Message>
 
 enum class JobType
 {

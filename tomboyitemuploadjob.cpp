@@ -17,13 +17,13 @@
     02110-1301, USA.
 */
 
+#include "tomboyitemuploadjob.h"
+#include "debug.h"
+#include <klocalizedstring.h>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QUuid>
-#include <klocalizedstring.h>
-#include "debug.h"
-#include "tomboyitemuploadjob.h"
 
 TomboyItemUploadJob::TomboyItemUploadJob(const Akonadi::Item &item, JobType jobType, KIO::AccessManager *manager, QObject *parent)
     : TomboyJobBase(manager, parent),

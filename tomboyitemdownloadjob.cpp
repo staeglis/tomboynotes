@@ -17,12 +17,12 @@
     02110-1301, USA.
 */
 
+#include "tomboyitemdownloadjob.h"
+#include "debug.h"
+#include <KMime/Message>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <KMime/Message>
-#include "debug.h"
-#include "tomboyitemdownloadjob.h"
 
 TomboyItemDownloadJob::TomboyItemDownloadJob(const Akonadi::Item &item, KIO::AccessManager *manager, QObject *parent)
     : TomboyJobBase(manager, parent),

@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Akonadi TomboyNotes Resource
-Comment=Resource for tomboy compatible notes server
+Comment=Resource for Tomboy compatible notes server
 Type=AkonadiResource
 Exec=akonadi_tomboynotes_resource
 Icon=view-pim-notes
