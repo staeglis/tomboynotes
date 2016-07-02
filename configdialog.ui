@@ -45,7 +45,11 @@
         </widget>
        </item>
        <item>
-        <widget class="KLineEdit" name="kcfg_collectionName"/>
+        <widget class="KLineEdit" name="kcfg_collectionName">
+         <property name="showClearButton" stdset="0">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QLabel" name="label">
@@ -58,6 +62,9 @@
         <widget class="KLineEdit" name="kcfg_ServerURL">
          <property name="toolTip">
           <string>This value is not changeable after first setup</string>
+         </property>
+         <property name="showClearButton" stdset="0">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
