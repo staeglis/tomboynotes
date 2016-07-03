@@ -39,9 +39,6 @@
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="QLabel" name="label_2">
-         <property name="locale">
-          <locale language="English" country="UnitedStates"/>
-         </property>
          <property name="text">
           <string>Display name:</string>
          </property>
@@ -56,9 +53,6 @@
        </item>
        <item>
         <widget class="QLabel" name="label">
-         <property name="locale">
-          <locale language="English" country="UnitedStates"/>
-         </property>
          <property name="text">
           <string>Type in the server URL:</string>
          </property>
@@ -76,9 +70,6 @@
        </item>
        <item>
         <widget class="QCheckBox" name="kcfg_ReadOnly">
-         <property name="locale">
-          <locale language="English" country="UnitedStates"/>
-         </property>
          <property name="text">
           <string>Open in read-only mode</string>
          </property>
@@ -86,9 +77,6 @@
        </item>
        <item>
         <widget class="QCheckBox" name="kcfg_ignoreSslErrors">
-         <property name="locale">
-          <locale language="English" country="UnitedStates"/>
-         </property>
          <property name="text">
           <string>Ignore SSL errors</string>
          </property>
