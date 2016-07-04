@@ -70,6 +70,7 @@ set(tomboynotesresource_SRCS
     tomboyitemsdownloadjob.cpp
     tomboyjobbase.cpp
     tomboyserverauthenticatejob.cpp
+    o1tomboy.cpp
 )
 
 ecm_qt_declare_logging_category(tomboynotesresource_SRCS
