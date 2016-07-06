@@ -49,8 +49,7 @@ void TomboyCollectionsDownloadJob::onRequestFinished()
 {
     qCDebug(log_tomboynotesresource) << "TomboyCollectionsDownloadJob: Network request finished";
     checkReplyError();
-    if (error() != TomboyJobError::NoError)
-    {
+    if (error() != TomboyJobError::NoError) {
         setErrorText(mReply->errorString());
         emitResult();
         return;
