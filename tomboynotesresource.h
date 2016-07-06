@@ -21,7 +21,7 @@
 #define TOMBOYNOTESRESOURCE_H
 
 #include "o1tomboy.h"
-#include "o1requestor.h"
+#include <o2/o1requestor.h>
 #include <AkonadiAgentBase/ResourceBase>
 #include <KIO/AccessManager>
 

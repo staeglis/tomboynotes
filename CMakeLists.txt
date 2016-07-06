@@ -28,6 +28,7 @@ find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime REQUIRED)
 find_package(KF5WindowSystem REQUIRED)
+find_package(o2 REQUIRED)
 
 find_program(XSLTPROC_EXECUTABLE xsltproc DOC "Path to xslt executable")
 
@@ -122,9 +123,6 @@ install(TARGETS akonadi_tomboynotes_resource ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 install(FILES tomboynotesresource.desktop
         DESTINATION "${KDE_INSTALL_DATAROOTDIR}/share/akonadi/agents"
 )
-
-add_subdirectory(o2)
-include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} "o2/src" )
 
 ########### summary ############
 
