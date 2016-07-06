@@ -64,7 +64,7 @@ void TomboyCollectionsDownloadJob::onRequestFinished()
     qCDebug(log_tomboynotesresource) << "TomboyCollectionsDownloadJob: " << collectionRevision;
 
     Akonadi::Collection c;
-    c.setParentCollection( Akonadi::Collection::root());
+    c.setParentCollection(Akonadi::Collection::root());
     c.setRemoteId(mContentURL);
     c.setName(mCollectionName);
     c.setRemoteRevision(QString::number(collectionRevision.toInt()));
