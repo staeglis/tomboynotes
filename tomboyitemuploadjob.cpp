@@ -63,7 +63,7 @@ void TomboyItemUploadJob::start()
         jsonNote[QLatin1String("command")] = QStringLiteral("delete");
         break;
     case JobType::AddItem:
-        jsonNote["create-date"] = getCurrentISOTime();
+        jsonNote[QLatin1String("create-date")] = getCurrentISOTime();
         // Missing break is intended
     case JobType::ModifyItem:
         jsonNote[QLatin1String("title")] = mNoteContent->headerByType("subject")->asUnicodeString();

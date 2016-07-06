@@ -66,12 +66,12 @@ ConfigDialog::~ConfigDialog()
 
 void ConfigDialog::saveSettings()
 {
-    if ( ui->kcfg_ServerURL->text() != mSettings->serverURL() ) {
+    if (ui->kcfg_ServerURL->text() != mSettings->serverURL()) {
         mSettings->setRequestToken(QString());
         mSettings->setRequestTokenSecret(QString());
     }
 
-    if(ui->kcfg_collectionName->text().isEmpty()) {
+    if (ui->kcfg_collectionName->text().isEmpty()) {
         ui->kcfg_collectionName->setText(i18n("Tomboy Notes %1", Settings::serverURL()));
     }
 
