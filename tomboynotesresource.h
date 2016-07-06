@@ -20,8 +20,6 @@
 #ifndef TOMBOYNOTESRESOURCE_H
 #define TOMBOYNOTESRESOURCE_H
 
-#include "o1tomboy.h"
-#include <o2/o1requestor.h>
 #include <AkonadiAgentBase/ResourceBase>
 #include <KIO/AccessManager>
 
