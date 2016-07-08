@@ -136,9 +136,7 @@ void TomboyNotesResource::onAuthorizationFinished(KJob *kjob)
         Settings::self()->save();
         synchronizeCollectionTree();
         synchronize();
-    }
-    else
-    {
+    } else {
         showError(job->errorText());
     }
 }
@@ -239,9 +237,7 @@ void TomboyNotesResource::configure(WId windowId)
         connect(job, &KJob::result, this, &TomboyNotesResource::onAuthorizationFinished);
         job->start();
         qCDebug(log_tomboynotesresource) << "Authorization job started";
-    }
-    else
-    {
+    } else {
         synchronize();
     }
 }

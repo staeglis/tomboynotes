@@ -111,8 +111,7 @@ void TomboyServerAuthenticateJob::onApiRequestFinished()
 void TomboyServerAuthenticateJob::onUserRequestFinished()
 {
     checkReplyError();
-    if (error() != TomboyJobError::NoError)
-    {
+    if (error() != TomboyJobError::NoError) {
         setErrorText(mReply->errorString());
         emitResult();
         return;

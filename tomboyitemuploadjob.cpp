@@ -57,7 +57,7 @@ void TomboyItemUploadJob::start()
 {
     // Convert note to JSON
     QJsonObject jsonNote;
-    jsonNote["guid"] = mSourceItem.remoteId();
+    jsonNote[QLatin1String("guid")] = mSourceItem.remoteId();
     switch (mJobType) {
     case JobType::DeleteItem:
         jsonNote[QLatin1String("command")] = QStringLiteral("delete");
