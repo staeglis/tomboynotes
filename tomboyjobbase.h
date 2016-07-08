@@ -21,10 +21,10 @@
 #define TOMBOYJOBBASE_H
 
 #include "o1tomboy.h"
+#include "o2/o1requestor.h"
 #include <kcompositejob.h>
 #include <KIO/AccessManager>
 #include <QString>
-#include <o2/o1requestor.h>
 
 enum TomboyJobError
 {

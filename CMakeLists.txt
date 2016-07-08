@@ -72,6 +72,18 @@ set(tomboynotesresource_SRCS
     tomboyjobbase.cpp
     tomboyserverauthenticatejob.cpp
     o1tomboy.cpp
+    o2/o0settingsstore.cpp
+    o2/o0baseauth.cpp
+    o2/o0abstractstore.h
+    o2/o0globals.h
+    o2/o1.cpp
+    o2/o1requestor.cpp
+    o2/o1timedreply.cpp
+    o2/o2.cpp
+    o2/o2reply.cpp
+    o2/o2replyserver.cpp
+    o2/o2requestor.cpp
+    o2/o2simplecrypt.cpp
 )
 
 ecm_qt_declare_logging_category(tomboynotesresource_SRCS
@@ -100,7 +112,6 @@ qt5_add_dbus_adaptor(tomboynotesresource_SRCS
 
 add_executable(akonadi_tomboynotes_resource ${tomboynotesresource_SRCS})
 target_link_libraries(akonadi_tomboynotes_resource
-    o2
     Qt5::DBus
     Qt5::Gui
     Qt5::Network

@@ -20,7 +20,7 @@
 #ifndef O1TOMBOY_H
 #define O1TOMBOY_H
 
-#include <o2/o1.h>
+#include "o2/o1.h"
 
 class O1Tomboy : public O1 {
     Q_OBJECT
