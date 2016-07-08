@@ -7,17 +7,12 @@
 #  O2_DEFINITIONS - Compiler switches required for using o2
 #
 
-find_package(PkgConfig)
-pkg_check_modules(PC_O2 QUIET o2)
-set(O2_DEFINITIONS ${PC_O2_CFLAGS_OTHER})
-
 find_library(O2_LIBRARIES
   NAMES o2 o20
-  HINTS ${PC_O2_LIBDIR} ${PC_O2_LIBRARIES_DIRS}
 )
 
 find_path(O2_INCLUDE_DIR o1.h
-  HINTS ${PC_O2_INCLUDEDIR} ${PC_O2_INCLUDE_DIRS}
+  HINTS /usr/include
   PATH_SUFFIXES o2
 )
 
