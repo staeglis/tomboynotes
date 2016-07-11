@@ -23,7 +23,7 @@
 #include <kconfigdialogmanager.h>
 #include <klocalizedstring.h>
 
-ConfigDialog::ConfigDialog(Settings* settings, QWidget *parent) :
+ConfigDialog::ConfigDialog(Settings *settings, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ConfigDialog),
     mSettings(settings)

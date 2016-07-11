@@ -24,8 +24,7 @@
 #include <AkonadiCore/Item>
 #include <KMime/Message>
 
-enum class JobType
-{
+enum class JobType {
     AddItem,
     ModifyItem,
     DeleteItem

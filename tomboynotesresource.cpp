@@ -42,8 +42,8 @@ TomboyNotesResource::TomboyNotesResource(const QString &id)
 {
     new SettingsAdaptor(Settings::self());
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Settings"),
-                                                 Settings::self(),
-                                                 QDBusConnection::ExportAdaptors);
+            Settings::self(),
+            QDBusConnection::ExportAdaptors);
 
     // Akonadi:Item should always provide the payload
     changeRecorder()->itemFetchScope().fetchFullPayload(true);
@@ -51,7 +51,9 @@ TomboyNotesResource::TomboyNotesResource(const QString &id)
     // Status message stuff
     mStatusMessageTimer = new QTimer(this);
     mStatusMessageTimer->setSingleShot(true);
-    connect(mStatusMessageTimer, &QTimer::timeout, [=]() { Q_EMIT status(Akonadi::AgentBase::Idle, QString()); });
+    connect(mStatusMessageTimer, &QTimer::timeout, [ = ]() {
+        Q_EMIT status(Akonadi::AgentBase::Idle, QString());
+    });
     connect(this, &AgentBase::error, this, &TomboyNotesResource::showError);
 
     mUploadJobProcessRunning = false;
@@ -84,7 +86,6 @@ void TomboyNotesResource::retrieveCollections()
     qCDebug(log_tomboynotesresource) << "Retriving collections job started";
 }
 
-
 void TomboyNotesResource::retrieveItems(const Akonadi::Collection &collection)
 {
     if (configurationNotValid()) {
@@ -104,7 +105,7 @@ void TomboyNotesResource::retrieveItems(const Akonadi::Collection &collection)
 
 bool TomboyNotesResource::retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts)
 {
-    Q_UNUSED( parts );
+    Q_UNUSED(parts);
 
     if (configurationNotValid()) {
         cancelTask(i18n("Resource configuration is not valid"));
@@ -244,7 +245,7 @@ void TomboyNotesResource::configure(WId windowId)
 
 void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)
 {
-    Q_UNUSED( collection );
+    Q_UNUSED(collection);
     if (Settings::readOnly() || configurationNotValid()) {
         cancelTask(i18n("Resource is read-only"));
         return;
@@ -265,7 +266,7 @@ void TomboyNotesResource::itemAdded(const Akonadi::Item &item, const Akonadi::Co
 
 void TomboyNotesResource::itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &parts)
 {
-    Q_UNUSED( parts );
+    Q_UNUSED(parts);
     if (Settings::readOnly() || configurationNotValid()) {
         cancelTask(i18n("Resource is read-only"));
         return;

@@ -26,8 +26,7 @@
 #include <KIO/AccessManager>
 #include <QString>
 
-enum TomboyJobError
-{
+enum TomboyJobError {
     NoError,
     TemporaryError,
     PermanentError

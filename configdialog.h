@@ -26,7 +26,8 @@ class KConfigDialogManager;
 
 class Settings;
 
-namespace Ui {
+namespace Ui
+{
 class ConfigDialog;
 }
 
@@ -35,7 +36,7 @@ class ConfigDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ConfigDialog(Settings* settings, QWidget *parent = Q_NULLPTR);
+    explicit ConfigDialog(Settings *settings, QWidget *parent = Q_NULLPTR);
     ~ConfigDialog();
 
     void saveSettings();

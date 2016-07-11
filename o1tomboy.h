@@ -22,7 +22,8 @@
 
 #include "o2/o1.h"
 
-class O1Tomboy : public O1 {
+class O1Tomboy : public O1
+{
     Q_OBJECT
 public:
     explicit O1Tomboy(QObject *parent = Q_NULLPTR);
