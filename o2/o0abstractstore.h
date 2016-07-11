@@ -5,11 +5,13 @@
 #include <QString>
 
 /// Storage for strings.
-class O0AbstractStore: public QObject {
+class O0AbstractStore: public QObject
+{
     Q_OBJECT
 
 public:
-    explicit O0AbstractStore(QObject *parent = 0): QObject(parent) {
+    explicit O0AbstractStore(QObject *parent = 0): QObject(parent)
+    {
     }
 
     /// Retrieve a string value by key.

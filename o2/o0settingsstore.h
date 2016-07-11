@@ -8,7 +8,8 @@
 #include "o2/o0simplecrypt.h"
 
 /// Persistent storage for authentication tokens, using QSettings.
-class O0SettingsStore: public O0AbstractStore {
+class O0SettingsStore: public O0AbstractStore
+{
     Q_OBJECT
 
 public:
@@ -34,7 +35,7 @@ Q_SIGNALS:
     void groupKeyChanged();
 
 protected:
-    QSettings* settings_;
+    QSettings *settings_;
     QString groupKey_;
     O0SimpleCrypt crypt_;
 };

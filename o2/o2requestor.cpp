@@ -8,7 +8,8 @@
 #include "o2/o2.h"
 #include "o2/o0globals.h"
 
-O2Requestor::O2Requestor(QNetworkAccessManager *manager, O2 *authenticator, QObject *parent): QObject(parent), reply_(NULL), status_(Idle) {
+O2Requestor::O2Requestor(QNetworkAccessManager *manager, O2 *authenticator, QObject *parent): QObject(parent), reply_(NULL), status_(Idle)
+{
     manager_ = manager;
     authenticator_ = authenticator;
     if (authenticator) {
@@ -18,10 +19,12 @@ O2Requestor::O2Requestor(QNetworkAccessManager *manager, O2 *authenticator, QObj
     connect(authenticator, SIGNAL(refreshFinished(QNetworkReply::NetworkError)), this, SLOT(onRefreshFinished(QNetworkReply::NetworkError)), Qt::QueuedConnection);
 }
 
-O2Requestor::~O2Requestor() {
+O2Requestor::~O2Requestor()
+{
 }
 
-int O2Requestor::get(const QNetworkRequest &req) {
+int O2Requestor::get(const QNetworkRequest &req)
+{
     if (-1 == setup(req, QNetworkAccessManager::GetOperation)) {
         return -1;
     }
@@ -32,7 +35,8 @@ int O2Requestor::get(const QNetworkRequest &req) {
     return id_;
 }
 
-int O2Requestor::post(const QNetworkRequest &req, const QByteArray &data) {
+int O2Requestor::post(const QNetworkRequest &req, const QByteArray &data)
+{
     if (-1 == setup(req, QNetworkAccessManager::PostOperation)) {
         return -1;
     }
@@ -45,7 +49,8 @@ int O2Requestor::post(const QNetworkRequest &req, const QByteArray &data) {
     return id_;
 }
 
-int O2Requestor::put(const QNetworkRequest &req, const QByteArray &data) {
+int O2Requestor::put(const QNetworkRequest &req, const QByteArray &data)
+{
     if (-1 == setup(req, QNetworkAccessManager::PutOperation)) {
         return -1;
     }
@@ -58,7 +63,8 @@ int O2Requestor::put(const QNetworkRequest &req, const QByteArray &data) {
     return id_;
 }
 
-void O2Requestor::onRefreshFinished(QNetworkReply::NetworkError error) {
+void O2Requestor::onRefreshFinished(QNetworkReply::NetworkError error)
+{
     if (status_ != Requesting) {
         qWarning() << "O2Requestor::onRefreshFinished: No pending request";
         return;
@@ -71,7 +77,8 @@ void O2Requestor::onRefreshFinished(QNetworkReply::NetworkError error) {
     }
 }
 
-void O2Requestor::onRequestFinished() {
+void O2Requestor::onRequestFinished()
+{
     QNetworkReply *senderReply = qobject_cast<QNetworkReply *>(sender());
     QNetworkReply::NetworkError error = senderReply->error();
     if (status_ == Idle) {
@@ -85,7 +92,8 @@ void O2Requestor::onRequestFinished() {
     }
 }
 
-void O2Requestor::onRequestError(QNetworkReply::NetworkError error) {
+void O2Requestor::onRequestError(QNetworkReply::NetworkError error)
+{
     qWarning() << "O2Requestor::onRequestError: Error" << (int)error;
     if (status_ == Idle) {
         return;
@@ -107,7 +115,8 @@ void O2Requestor::onRequestError(QNetworkReply::NetworkError error) {
     QTimer::singleShot(10, this, SLOT(finish()));
 }
 
-void O2Requestor::onUploadProgress(qint64 uploaded, qint64 total) {
+void O2Requestor::onUploadProgress(qint64 uploaded, qint64 total)
+{
     if (status_ == Idle) {
         qWarning() << "O2Requestor::onUploadProgress: No pending request";
         return;
@@ -118,7 +127,8 @@ void O2Requestor::onUploadProgress(qint64 uploaded, qint64 total) {
     Q_EMIT uploadProgress(id_, uploaded, total);
 }
 
-int O2Requestor::setup(const QNetworkRequest &req, QNetworkAccessManager::Operation operation) {
+int O2Requestor::setup(const QNetworkRequest &req, QNetworkAccessManager::Operation operation)
+{
     static int currentId;
     QUrl url;
 
@@ -144,7 +154,8 @@ int O2Requestor::setup(const QNetworkRequest &req, QNetworkAccessManager::Operat
     return id_;
 }
 
-void O2Requestor::finish() {
+void O2Requestor::finish()
+{
     QByteArray data;
     if (status_ == Idle) {
         qWarning() << "O2Requestor::finish: No pending request";
@@ -158,7 +169,8 @@ void O2Requestor::finish() {
     Q_EMIT finished(id_, error_, data);
 }
 
-void O2Requestor::retry() {
+void O2Requestor::retry()
+{
     if (status_ != Requesting) {
         qWarning() << "O2Requestor::retry: No pending request";
         return;

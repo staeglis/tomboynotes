@@ -7,7 +7,8 @@
 #include <QString>
 
 /// HTTP server to process authentication response.
-class O2ReplyServer: public QTcpServer {
+class O2ReplyServer: public QTcpServer
+{
     Q_OBJECT
 
 public:

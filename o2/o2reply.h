@@ -9,7 +9,8 @@
 #include <QByteArray>
 
 /// A network request/reply pair that can time out.
-class O2Reply: public QTimer {
+class O2Reply: public QTimer
+{
     Q_OBJECT
 
 public:
@@ -27,9 +28,13 @@ public:
 };
 
 /// List of O2Replies.
-class O2ReplyList {
+class O2ReplyList
+{
 public:
-    O2ReplyList() { ignoreSslErrors_ = false; }
+    O2ReplyList()
+    {
+        ignoreSslErrors_ = false;
+    }
 
     /// Destructor.
     /// Deletes all O2Reply instances in the list.

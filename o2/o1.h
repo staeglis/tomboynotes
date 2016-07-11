@@ -10,7 +10,8 @@
 class O2ReplyServer;
 
 /// Simple OAuth 1.0 authenticator.
-class O1: public O0BaseAuth {
+class O1: public O0BaseAuth
+{
     Q_OBJECT
 
 public:
@@ -92,7 +93,7 @@ Q_SIGNALS:
 
 protected Q_SLOTS:
     /// Handle verification received from the reply server.
-    virtual void onVerificationReceived(QMap<QString,QString> params);
+    virtual void onVerificationReceived(QMap<QString, QString> params);
 
     /// Handle token request error.
     virtual void onTokenRequestError(QNetworkReply::NetworkError error);

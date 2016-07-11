@@ -109,7 +109,10 @@ public:
     /**
       Returns true if SimpleCrypt has been initialized with a key.
       */
-    bool hasKey() const {return !m_keyParts.isEmpty();}
+    bool hasKey() const
+    {
+        return !m_keyParts.isEmpty();
+    }
 
     /**
       Sets the compression mode to use when encrypting data. The default mode is Auto.
@@ -117,11 +120,17 @@ public:
       Note that decryption is not influenced by this mode, as the decryption recognizes
       what mode was used when encrypting.
       */
-    void setCompressionMode(CompressionMode mode) {m_compressionMode = mode;}
+    void setCompressionMode(CompressionMode mode)
+    {
+        m_compressionMode = mode;
+    }
     /**
       Returns the CompressionMode that is currently in use.
       */
-    CompressionMode compressionMode() const {return m_compressionMode;}
+    CompressionMode compressionMode() const
+    {
+        return m_compressionMode;
+    }
 
     /**
       Sets the integrity mode to use when encrypting data. The default mode is Checksum.
@@ -129,23 +138,32 @@ public:
       Note that decryption is not influenced by this mode, as the decryption recognizes
       what mode was used when encrypting.
       */
-    void setIntegrityProtectionMode(IntegrityProtectionMode mode) {m_protectionMode = mode;}
+    void setIntegrityProtectionMode(IntegrityProtectionMode mode)
+    {
+        m_protectionMode = mode;
+    }
     /**
       Returns the IntegrityProtectionMode that is currently in use.
       */
-    IntegrityProtectionMode integrityProtectionMode() const {return m_protectionMode;}
+    IntegrityProtectionMode integrityProtectionMode() const
+    {
+        return m_protectionMode;
+    }
 
     /**
       Returns the last error that occurred.
       */
-    Error lastError() const {return m_lastError;}
+    Error lastError() const
+    {
+        return m_lastError;
+    }
 
     /**
       Encrypts the @arg plaintext string with the key the class was initialized with, and returns
       a cyphertext the result. The result is a base64 encoded version of the binary array that is the
       actual result of the string, so it can be stored easily in a text format.
       */
-    QString encryptToString(const QString& plaintext) ;
+    QString encryptToString(const QString &plaintext) ;
     /**
       Encrypts the @arg plaintext QByteArray with the key the class was initialized with, and returns
       a cyphertext the result. The result is a base64 encoded version of the binary array that is the
@@ -159,7 +177,7 @@ public:
       This method returns a byte array, that is useable for storing a binary format. If you need
       a string you can store in a text file, use encryptToString() instead.
       */
-    QByteArray encryptToByteArray(const QString& plaintext) ;
+    QByteArray encryptToByteArray(const QString &plaintext) ;
     /**
       Encrypts the @arg plaintext QByteArray with the key the class was initialized with, and returns
       a binary cyphertext in a QByteArray the result.
@@ -176,7 +194,7 @@ public:
       If an error occured, such as non-matching keys between encryption and decryption,
       an empty string or a string containing nonsense may be returned.
       */
-    QString decryptToString(const QString& cyphertext) ;
+    QString decryptToString(const QString &cyphertext) ;
     /**
       Decrypts a cyphertext string encrypted with this class with the set key back to the
       plain text version.
@@ -184,7 +202,7 @@ public:
       If an error occured, such as non-matching keys between encryption and decryption,
       an empty string or a string containing nonsense may be returned.
       */
-    QByteArray decryptToByteArray(const QString& cyphertext) ;
+    QByteArray decryptToByteArray(const QString &cyphertext) ;
     /**
       Decrypts a cyphertext binary encrypted with this class with the set key back to the
       plain text version.
@@ -204,11 +222,11 @@ public:
 
     //enum to describe options that have been used for the encryption. Currently only one, but
     //that only leaves room for future extensions like adding a cryptographic hash...
-    enum CryptoFlag{CryptoFlagNone = 0,
-                    CryptoFlagCompression = 0x01,
-                    CryptoFlagChecksum = 0x02,
-                    CryptoFlagHash = 0x04
-                   };
+    enum CryptoFlag {CryptoFlagNone = 0,
+                     CryptoFlagCompression = 0x01,
+                     CryptoFlagChecksum = 0x02,
+                     CryptoFlagHash = 0x04
+                    };
     Q_DECLARE_FLAGS(CryptoFlags, CryptoFlag)
 private:
 

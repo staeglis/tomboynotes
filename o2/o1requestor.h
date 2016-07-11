@@ -12,7 +12,8 @@ class QNetworkReply;
 class O1;
 
 /// Makes authenticated requests using OAuth 1.0.
-class O1Requestor: public QObject {
+class O1Requestor: public QObject
+{
     Q_OBJECT
 
 public:
@@ -56,6 +57,5 @@ protected:
     QNetworkAccessManager *manager_;
     O1 *authenticator_;
 };
-
 
 #endif // O1REQUESTOR_H

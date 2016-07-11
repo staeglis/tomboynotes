@@ -7,37 +7,44 @@
 #include "o2/o1timedreply.h"
 #include "o2/o0globals.h"
 
-O1Requestor::O1Requestor(QNetworkAccessManager *manager, O1 *authenticator, QObject *parent): QObject(parent) {
+O1Requestor::O1Requestor(QNetworkAccessManager *manager, O1 *authenticator, QObject *parent): QObject(parent)
+{
     manager_ = manager;
     authenticator_ = authenticator;
 }
 
-QNetworkReply *O1Requestor::get(const QNetworkRequest &req, const QList<O0RequestParameter> &signingParameters) {
+QNetworkReply *O1Requestor::get(const QNetworkRequest &req, const QList<O0RequestParameter> &signingParameters)
+{
     QNetworkRequest request = setup(req, signingParameters, QNetworkAccessManager::GetOperation);
     return addTimer(manager_->get(request));
 }
 
-QNetworkReply *O1Requestor::post(const QNetworkRequest &req, const QList<O0RequestParameter> &signingParameters, const QByteArray &data) {
+QNetworkReply *O1Requestor::post(const QNetworkRequest &req, const QList<O0RequestParameter> &signingParameters, const QByteArray &data)
+{
     QNetworkRequest request = setup(req, signingParameters, QNetworkAccessManager::PostOperation);
     return addTimer(manager_->post(request, data));
 }
 
-QNetworkReply *O1Requestor::post(const QNetworkRequest &req, const QList<O0RequestParameter> &signingParameters, QHttpMultiPart * multiPart) {
+QNetworkReply *O1Requestor::post(const QNetworkRequest &req, const QList<O0RequestParameter> &signingParameters, QHttpMultiPart *multiPart)
+{
     QNetworkRequest request = setup(req, signingParameters, QNetworkAccessManager::PostOperation);
     return addTimer(manager_->post(request, multiPart));
 }
 
-QNetworkReply *O1Requestor::put(const QNetworkRequest &req, const QList<O0RequestParameter> &signingParameters, const QByteArray &data) {
+QNetworkReply *O1Requestor::put(const QNetworkRequest &req, const QList<O0RequestParameter> &signingParameters, const QByteArray &data)
+{
     QNetworkRequest request = setup(req, signingParameters, QNetworkAccessManager::PutOperation);
     return addTimer(manager_->put(request, data));
 }
 
-QNetworkReply *O1Requestor::addTimer(QNetworkReply *reply) {
+QNetworkReply *O1Requestor::addTimer(QNetworkReply *reply)
+{
     (void)new O1TimedReply(reply);
     return reply;
 }
 
-QNetworkRequest O1Requestor::setup(const QNetworkRequest &req, const QList<O0RequestParameter> &signingParameters, QNetworkAccessManager::Operation operation) {
+QNetworkRequest O1Requestor::setup(const QNetworkRequest &req, const QList<O0RequestParameter> &signingParameters, QNetworkAccessManager::Operation operation)
+{
     // Collect OAuth parameters
     QList<O0RequestParameter> oauthParams;
     oauthParams.append(O0RequestParameter(O2_OAUTH_CONSUMER_KEY, authenticator_->clientId().toLatin1()));

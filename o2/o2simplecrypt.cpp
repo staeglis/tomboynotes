@@ -61,16 +61,17 @@ void O0SimpleCrypt::splitKey()
 {
     m_keyParts.clear();
     m_keyParts.resize(8);
-    for (int i=0;i<8;i++) {
+    for (int i = 0; i < 8; i++) {
         quint64 part = m_key;
-        for (int j=i; j>0; j--)
+        for (int j = i; j > 0; j--) {
             part = part >> 8;
+        }
         part = part & 0xff;
         m_keyParts[i] = static_cast<char>(part);
     }
 }
 
-QByteArray O0SimpleCrypt::encryptToByteArray(const QString& plaintext)
+QByteArray O0SimpleCrypt::encryptToByteArray(const QString &plaintext)
 {
     QByteArray plaintextArray = plaintext.toUtf8();
     return encryptToByteArray(plaintextArray);
@@ -83,7 +84,6 @@ QByteArray O0SimpleCrypt::encryptToByteArray(QByteArray plaintext)
         m_lastError = ErrorNoKeySet;
         return QByteArray();
     }
-
 
     QByteArray ba = plaintext;
 
@@ -136,7 +136,7 @@ QByteArray O0SimpleCrypt::encryptToByteArray(QByteArray plaintext)
     return resultArray;
 }
 
-QString O0SimpleCrypt::encryptToString(const QString& plaintext)
+QString O0SimpleCrypt::encryptToString(const QString &plaintext)
 {
     QByteArray plaintextArray = plaintext.toUtf8();
     QByteArray cypher = encryptToByteArray(plaintextArray);
@@ -168,7 +168,7 @@ QString O0SimpleCrypt::decryptToString(QByteArray cypher)
     return plaintext;
 }
 
-QByteArray O0SimpleCrypt::decryptToByteArray(const QString& cyphertext)
+QByteArray O0SimpleCrypt::decryptToByteArray(const QString &cyphertext)
 {
     QByteArray cyphertextArray = QByteArray::fromBase64(cyphertext.toLatin1());
     QByteArray ba = decryptToByteArray(cyphertextArray);
@@ -193,7 +193,7 @@ QByteArray O0SimpleCrypt::decryptToByteArray(QByteArray cypher)
 
     char version = ba.at(0);
 
-    if (version !=3) {  //we only work with version 3
+    if (version != 3) { //we only work with version 3
         m_lastError = ErrorUnknownVersion;
         qWarning() << "Invalid version or not a cyphertext.";
         return QByteArray();
@@ -246,8 +246,9 @@ QByteArray O0SimpleCrypt::decryptToByteArray(QByteArray cypher)
         return QByteArray();
     }
 
-    if (flags.testFlag(CryptoFlagCompression))
+    if (flags.testFlag(CryptoFlagCompression)) {
         ba = qUncompress(ba);
+    }
 
     m_lastError = ErrorNoError;
     return ba;
